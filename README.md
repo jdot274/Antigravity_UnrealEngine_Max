@@ -12,7 +12,28 @@
 - **System Actions**: Added `launch_unreal` system action to the Python core, allowing real-time transition from web-based control to the physical packaged project.
 - **Workflow Sync**: Established a bridge for working in the native Unreal project while maintaining tactical control through the Nexus overlay.
 
-### 3. Multi-Channel NLP AI Integration
+---
+
+## 🧠 The Sentient MCP Stack Architecture
+The **Sentient MCP Stack** is the specialized architectural blueprint of **Antigravity_UnrealEngine**. It transforms a standard development environment into an **"AI-Aware Operating System"** where the AI doesn't just talk—it builds.
+
+### Layer 1: The Core (Sentient Reasoner)
+- **The Brain**: Powered by **Gemini 1.5-Flash**.
+- **Self-Awareness**: The brain is fed live context about project structure, Unreal Engine 5.7 specifications, and asset manifests. It knows exactly what it is controlling.
+- **The Hub**: Managed via `bridge/server.js`, handling all high-level logic routing and decision-making.
+
+### Layer 2: The Nervous System (MCP Protocol)
+- **The Connector**: Built on the **Model Context Protocol**, this is the universal "glue" between AI logic and machine reality.
+- **Knowledge Mesh**: Enables the AI to **Read** local files and metadata, and **Act** by calling specialized tools to manipulate the engine.
+- **Unified Signal**: Centralizes commands from the Unreal Terminal, Hub UI, and CLI into a single authoritative stream.
+
+### Layer 3: The Physical Effectors (Real-Time Execution)
+The "Tactical" layer that translates AI thought into engine reality:
+- **Engine Execution (`unreal_ai_link.py`)**: Instant procedural code generation and execution (`implement()` / `implement_cpp()`).
+- **Visual Feedback (`nexus_hub.html`)**: A glassmorphism tactical overlay for real-time visualization of the system's "thoughts."
+- **Headless Control (`nexus_chat_cli.py`)**: Direct natural language interface for headless architectural control.
+
+---
 - **Gemini-Powered Nexus Bridge**: Upgraded the `bridge/server.js` to support high-performance Gemini API 1.5-Flash integration via HTTP (Port 3002) and WebSocket (Port 3001).
 - **Unreal Editor Terminal Link**: Developed `unreal_ai_link.py`, allowing natural language interaction directly from the **Unreal Engine Python Console**.
 - **Real-Time Editor Implementation**:
