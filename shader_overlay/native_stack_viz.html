@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Native Tech Stacks</title>
+    <style>
+        body,
+        html {
+            margin: 0;
+            overflow: hidden;
+            background: transparent;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        #info {
+            position: absolute;
+            top: 10px;
+            width: 100%;
+            text-align: center;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            pointer-events: none;
+            text-shadow: 0 0 10px #000;
+        }
+
+        .stack-label {
+            position: absolute;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            font-size: 10px;
+            font-weight: bold;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 4px 8px;
+            border-radius: 4px;
+            pointer-events: none;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: opacity 0.3s;
+        }
+    </style>
+    <script src="three.min.js"></script>
+<link rel="stylesheet" href="theme.css"></head>
+
+<body>
+    <div id="info">ANTIGRAVITY GEMINI: NATIVE STACK VISUALIZER</div>
+    <script>
+        window.addEventListener('load', () => {
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+            camera.position.set(0, 2, 8);
+
+            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            document.body.appendChild(renderer.domElement);
+
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0x404040, 2);
+            scene.add(ambientLight);
+
+            const dirLight = new THREE.DirectionalLight(0xffffff, 2);
+            dirLight.position.set(5, 10, 7);
+            scene.add(dirLight);
+
+            const pointLight = new THREE.PointLight(0x3b82f6, 5, 10);
+            pointLight.position.set(0, 2, 2);
+            scene.add(pointLight);
+
+            // Platform Group
+            const stacksGroup = new THREE.Group();
+            scene.add(stacksGroup);
+
+            // Helpers to create chips
+            function createStackChip(color, xPos, logoText, subText) {
+                const group = new THREE.Group();
+                group.position.set(xPos, 0, 0);
+
+                // Base
+                const baseGeo = new THREE.CylinderGeometry(1.2, 1.2, 0.1, 32);
+                const baseMat = new THREE.MeshPhysicalMaterial({
+                    color: 0x111111, metalness: 0.9, roughness: 0.2,
+                    clearcoat: 1.0, transparent: true, opacity: 0.9
+                });
+                const base = new THREE.Mesh(baseGeo, baseMat);
+                group.add(base);
+
+                // Hologram Cylinder
+                const holoGeo = new THREE.CylinderGeometry(1.0, 1.0, 2, 32, 1, true);
+                const holoMat = new THREE.ShaderMaterial({
+                    uniforms: {
+                        color: { value: new THREE.Color(color) },
+                        time: { value: 0 }
+                    },
+                    vertexShader: `
+                        varying vec2 vUv;
+                        void main() {
+                            vUv = uv;
+                            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                        }
+                    `,
+                    fragmentShader: `
+                        uniform vec3 color;
+                        uniform float time;
+                        varying vec2 vUv;
+                        void main() {
+                            float alpha = smoothstep(0.0, 1.0, sin(vUv.y * 20.0 - time * 5.0)) * 0.5;
+                            alpha *= (1.0 - vUv.y); // Fade to top
+                            gl_FragColor = vec4(color, alpha);
+                        }
+                    `,
+                    transparent: true, side: THREE.DoubleSide, depthWrite: false, blending: THREE.AdditiveBlending
+                });
+                const holo = new THREE.Mesh(holoGeo, holoMat);
+                holo.position.y = 1.1;
+                group.add(holo);
+
+                // Core Cube
+                const coreGeo = new THREE.BoxGeometry(0.6, 0.6, 0.6);
+                const coreMat = new THREE.MeshStandardMaterial({
+                    color: color, emissive: color, emissiveIntensity: 0.5,
+                    metalness: 0.8, roughness: 0.2
+                });
+                const core = new THREE.Mesh(coreGeo, coreMat);
+                core.position.y = 1.0;
+                group.add(core);
+
+                // Floating Text Label
+                const div = document.createElement('div');
+                div.className = 'stack-label';
+                div.innerHTML = `${logoText}<br><span style="font-size:8px;opacity:0.6">${subText}</span>`;
+                document.body.appendChild(div);
+
+                return { group, holoMat, core, div, basePos: new THREE.Vector3(xPos, 1.5, 0) };
+            }
+
+            const stacks = [
+                createStackChip(0xFF3B30, -3, "MACOS", "SWIFT + METAL"), // Apple Red
+                createStackChip(0x007AFF, 0, "WINDOWS", "WINUI 3 + DX12"), // Windows Blue
+                createStackChip(0xFF9500, 3, "LINUX", "RUST + VULKAN")  // Rust Orange
+            ];
+
+            // Animation Loop
+            const clock = new THREE.Clock();
+
+            function animate() {
+                requestAnimationFrame(animate);
+                const t = clock.getElapsedTime();
+
+                stacks.forEach((stack, i) => {
+                    // Bobbing
+                    stack.group.position.y = Math.sin(t * 2 + i) * 0.1;
+
+                    // Rotation
+                    stack.core.rotation.y = t * 0.5;
+                    stack.core.rotation.x = Math.sin(t) * 0.2;
+
+                    // Shader update
+                    stack.holoMat.uniforms.time.value = t;
+
+                    // Project label position
+                    const vector = stack.basePos.clone();
+                    stack.group.localToWorld(vector); // Actually basePos is world relative mostly, adjusting
+                    vector.set(stack.group.position.x, 2.2, 0); // Hardcoded offset for label
+                    vector.project(camera);
+
+                    const x = (vector.x * .5 + .5) * window.innerWidth;
+                    const y = (-(vector.y * .5) + .5) * window.innerHeight;
+
+                    stack.div.style.transform = `translate(-50%, -50%)`;
+                    stack.div.style.left = `${x}px`;
+                    stack.div.style.top = `${y}px`;
+                });
+
+                // Camera subtle sway
+                camera.position.x = Math.sin(t * 0.2) * 1;
+                camera.lookAt(0, 1, 0);
+
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            // Resize handle
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        });
+    </script>
+</body>
+
+</html>

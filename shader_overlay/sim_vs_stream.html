@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sim vs Stream</title>
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #050505;
+            color: white;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .split-container {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .pane {
+            flex: 1;
+            position: relative;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .label {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px black;
+            z-index: 10;
+        }
+
+        .sub {
+            font-size: 9px;
+            opacity: 0.6;
+            font-weight: normal;
+            margin-top: 5px;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+    <script src="three.min.js"></script>
+<link rel="stylesheet" href="theme.css"></head>
+
+<body>
+    <div class="split-container">
+        <!-- SIMULATION SIDE -->
+        <div class="pane" id="sim-pane">
+            <div class="label" style="color: #4ade80;">
+                SIMULATION
+                <div class="sub">STATEFUL • PHYSICS • EVOLUTION</div>
+            </div>
+        </div>
+
+        <!-- STREAMING SIDE -->
+        <div class="pane" id="stream-pane">
+            <div class="label" style="color: #3b82f6;">
+                PROCEDURAL STREAM
+                <div class="sub">STATELESS • MATH • INFINITE</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // SHARED SETUP
+        const simContainer = document.getElementById('sim-pane');
+        const streamContainer = document.getElementById('stream-pane');
+
+        // --- SIMULATION (Left) ---
+        const initSim = () => {
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x051005);
+            const camera = new THREE.PerspectiveCamera(50, simContainer.clientWidth / simContainer.clientHeight, 0.1, 100);
+            camera.position.z = 15;
+
+            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(simContainer.clientWidth, simContainer.clientHeight);
+            simContainer.appendChild(renderer.domElement);
+
+            // Physics Balls
+            const ballCount = 20;
+            const balls = [];
+            const ballGeo = new THREE.SphereGeometry(0.4, 16, 16);
+            const ballMat = new THREE.MeshBasicMaterial({ color: 0x4ade80 });
+
+            // Container Box
+            const boxGeo = new THREE.BoxGeometry(10, 10, 10);
+            const boxMat = new THREE.MeshBasicMaterial({ color: 0x4ade80, wireframe: true, transparent: true, opacity: 0.1 });
+            scene.add(new THREE.Mesh(boxGeo, boxMat));
+
+            for (let i = 0; i < ballCount; i++) {
+                const mesh = new THREE.Mesh(ballGeo, ballMat);
+                scene.add(mesh);
+                balls.push({
+                    mesh: mesh,
+                    pos: new THREE.Vector3((Math.random() - 0.5) * 8, (Math.random() - 0.5) * 8, (Math.random() - 0.5) * 8),
+                    vel: new THREE.Vector3((Math.random() - 0.5) * 0.2, (Math.random() - 0.5) * 0.2, (Math.random() - 0.5) * 0.2)
+                });
+            }
+
+            // Connection Lines
+            const lineMat = new THREE.LineBasicMaterial({ color: 0x4ade80, transparent: true, opacity: 0.2 });
+            const lineGeo = new THREE.BufferGeometry();
+            const lines = new THREE.LineSegments(lineGeo, lineMat);
+            scene.add(lines);
+
+            const animate = () => {
+                requestAnimationFrame(animate);
+
+                // 1. UPDATE STATE (Simulation Step)
+                const positions = [];
+                balls.forEach(ball => {
+                    ball.pos.add(ball.vel);
+
+                    // Bounce
+                    if (Math.abs(ball.pos.x) > 5) ball.vel.x *= -1;
+                    if (Math.abs(ball.pos.y) > 5) ball.vel.y *= -1;
+                    if (Math.abs(ball.pos.z) > 5) ball.vel.z *= -1;
+
+                    ball.mesh.position.copy(ball.pos);
+                    positions.push(ball.pos);
+                });
+
+                // Update connections
+                const linePos = [];
+                for (let i = 0; i < balls.length; i++) {
+                    for (let j = i + 1; j < balls.length; j++) {
+                        if (balls[i].pos.distanceTo(balls[j].pos) < 4) {
+                            linePos.push(balls[i].pos.x, balls[i].pos.y, balls[i].pos.z);
+                            linePos.push(balls[j].pos.x, balls[j].pos.y, balls[j].pos.z);
+                        }
+                    }
+                }
+                lineGeo.setAttribute('position', new THREE.Float32BufferAttribute(linePos, 3));
+
+                renderer.render(scene, camera);
+            };
+            animate();
+        };
+
+        // --- STREAMING (Right) ---
+        const initStream = () => {
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x050510);
+            const camera = new THREE.PerspectiveCamera(50, streamContainer.clientWidth / streamContainer.clientHeight, 0.1, 1000);
+
+            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(streamContainer.clientWidth, streamContainer.clientHeight);
+            streamContainer.appendChild(renderer.domElement);
+
+            // Procedural Tunnel Shader
+            const geometry = new THREE.CylinderGeometry(5, 5, 40, 32, 20, true);
+            const material = new THREE.ShaderMaterial({
+                side: THREE.BackSide,
+                transparent: true,
+                uniforms: { time: { value: 0 } },
+                vertexShader: `
+                    varying vec2 vUv;
+                    uniform float time;
+                    void main() {
+                        vUv = uv;
+                        vec3 pos = position;
+                        // Curvature (Pure Math)
+                        pos.x += sin(pos.z * 0.1 + time) * 2.0;
+                        pos.y += cos(pos.z * 0.1 + time) * 2.0;
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+                    }
+                `,
+                fragmentShader: `
+                    varying vec2 vUv;
+                    uniform float time;
+                    void main() {
+                        // Procedural Grid Generation
+                        float grid = abs(sin(vUv.y * 100.0 + time * 10.0) * sin(vUv.x * 20.0));
+                        float glow = 1.0 / (grid + 0.05); // SDF-like glow
+                        
+                        vec3 color = vec3(0.2, 0.5, 1.0) * glow * 0.1;
+                        // Distance fade
+                        float fade = smoothstep(0.0, 0.5, vUv.y); // Fade out in distance (y is 0..1 along cylinder length ish)
+                        
+                        gl_FragColor = vec4(color, 1.0);
+                    }
+                `
+            });
+
+            const tunnel = new THREE.Mesh(geometry, material);
+            tunnel.rotation.x = -Math.PI / 2;
+            scene.add(tunnel);
+
+            const animate = (time) => {
+                requestAnimationFrame(animate);
+                // 2. UPDATE UNIFORMS (Streaming Step)
+                material.uniforms.time.value = time * 0.001;
+                renderer.render(scene, camera);
+            };
+            animate(0);
+        };
+
+        initSim();
+        initStream();
+
+        // Handle Resize
+        window.addEventListener('resize', () => {
+            // Reloading page simple for split resizing
+            location.reload();
+        });
+    </script>
+</body>
+
+</html>

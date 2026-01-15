@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Git Time Machine</title>
+    <link rel="stylesheet" href="theme.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            overflow: hidden;
+        }
+
+        .timeline {
+            position: relative;
+            height: 100vh;
+            padding-left: 20px;
+            border-left: 2px solid var(--text-secondary);
+        }
+
+        .commit-node {
+            position: relative;
+            margin-bottom: 30px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .commit-node:hover {
+            background: rgba(128, 203, 196, 0.1);
+            transform: translateX(5px);
+        }
+
+        .commit-dot {
+            position: absolute;
+            left: -26px;
+            top: 15px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent);
+            border: 2px solid #263238;
+        }
+
+        .hash {
+            font-size: 10px;
+            color: var(--text-secondary);
+        }
+
+        .msg {
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--text-primary);
+        }
+
+        .author {
+            font-size: 10px;
+            color: var(--warning);
+            margin-top: 4px;
+        }
+
+        .diff-added {
+            color: var(--success);
+            font-size: 10px;
+        }
+
+        .diff-removed {
+            color: var(--danger);
+            font-size: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header" style="margin-bottom: 20px; padding: 10px; border-radius: 4px;">ACTIVE ASSET: Hero_Mesh.fbx
+    </div>
+    <div class="timeline" id="timeline">
+        <!-- JS Mock Data simulating 'git log' -->
+    </div>
+    <script>
+        const commits = [
+            { hash: 'e4f9a21', msg: 'Refined LODs and Collision', author: 'Joey', time: '10m ago', add: 12, del: 4 },
+            { hash: 'd8c2b90', msg: 'Imported Initial FBX', author: 'Joey', time: '1h ago', add: 1, del: 0 },
+            { hash: 'a1b2c3d', msg: 'Merge branch "feature/scifi"', author: 'System', time: '2h ago', add: 5, del: 2 }
+        ];
+
+        const container = document.getElementById('timeline');
+        commits.forEach(c => {
+            const el = document.createElement('div');
+            el.className = 'commit-node';
+            el.innerHTML = `
+                <div class="commit-dot"></div>
+                <div class="hash">commit ${c.hash}</div>
+                <div class="msg">${c.msg}</div>
+                <div class="author">${c.author} • ${c.time}</div>
+                <div style="margin-top:5px">
+                    <span class="diff-added">+${c.add}</span> 
+                    <span class="diff-removed">-${c.del}</span>
+                </div>
+            `;
+            el.onclick = () => {
+                // In a real app, this calls python to git checkout
+                alert(`Reverting to state: ${c.hash}`);
+            };
+            container.appendChild(el);
+        });
+    </script>
+</body>
+
+</html>

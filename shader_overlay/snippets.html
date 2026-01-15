@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C++ Power Code Stream</title>
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+            overflow-y: auto;
+            background-color: transparent;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            color: #e0e0e0;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+        }
+
+        #container {
+            margin: 10px;
+            padding: 20px;
+            border-radius: 24px;
+            background: rgba(13, 17, 23, 0.7);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 10px;
+        }
+
+        .header h1 {
+            font-size: 14px;
+            color: #4ade80;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 0;
+        }
+
+        .snippet-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+            border-left: 3px solid #60a5fa;
+            transition: transform 0.2s ease;
+        }
+
+        .snippet-card:hover {
+            transform: translateX(5px);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .title {
+            color: #facc15;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .title::before {
+            content: '⚡';
+            margin-right: 8px;
+        }
+
+        pre {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            overflow-x: auto;
+            color: #93c5fd;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .implementation-list {
+            margin-top: 12px;
+        }
+
+        .implementation-item {
+            font-size: 10px;
+            margin-bottom: 6px;
+            color: rgba(255, 255, 255, 0.6);
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .implementation-item::before {
+            content: '→';
+            margin-right: 8px;
+            color: #4ade80;
+        }
+
+        .tag {
+            display: inline-block;
+            font-size: 9px;
+            background: rgba(96, 165, 250, 0.2);
+            color: #93c5fd;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+    </style>
+<link rel="stylesheet" href="theme.css"></head>
+
+<body>
+    <div id="container">
+        <div class="header">
+            <h1>Power Code Stream</h1>
+            <div style="font-size: 10px; opacity: 0.5;">VSIX: ACTIVE</div>
+        </div>
+
+        <!-- SNIPPET 1 -->
+        <div class="snippet-card">
+            <span class="tag">ECS / Optimization</span>
+            <div class="title">Sparse Set Entity Container</div>
+            <pre><code>template &lt;typename T&gt;
+class SparseSet {
+    std::vector&lt;T&gt; dense;
+    std::vector&lt;int&gt; sparse;
+public:
+    void insert(int entity, T value) {
+        sparse[entity] = dense.size();
+        dense.push_back(value);
+    }
+};</code></pre>
+            <div class="implementation-list">
+                <div class="implementation-item">Add to Game: Register "TransformComponent" to handle 100k+ bullets.
+                </div>
+                <div class="implementation-item">Add to Game: Use for lightning-fast lookups in AI behavior trees.</div>
+                <div class="implementation-item">Add to Game: Batch render sprites by iterating only the dense array.
+                </div>
+            </div>
+        </div>
+
+        <!-- SNIPPET 2 -->
+        <div class="snippet-card" style="border-left-color: #4ade80;">
+            <span class="tag">Thread / Concurrency</span>
+            <div class="title">Lock-Free Spinlock Mutex</div>
+            <pre><code>struct Spinlock {
+    std::atomic_flag flag = ATOMIC_FLAG_INIT;
+    void lock() {
+        while (flag.test_and_set(std::memory_order_acquire));
+    }
+    void unlock() {
+        flag.clear(std::memory_order_release);
+    }
+};</code></pre>
+            <div class="implementation-list">
+                <div class="implementation-item">Add to Game: Protect per-frame logger from multi-threaded crash.</div>
+                <div class="implementation-item">Add to Game: Sync audio buffer access between main/audio threads.</div>
+                <div class="implementation-item">Add to Game: Secure task queue pops in low-latency job systems.</div>
+            </div>
+        </div>
+
+        <!-- SNIPPET 3 -->
+        <div class="snippet-card" style="border-left-color: #f87171;">
+            <span class="tag">Math / Rendering</span>
+            <div class="title">SIMD Ray-AABB Intersect</div>
+            <pre><code>__m128 intersect(Ray r, AABB box) {
+    __m128 invDir = _mm_rcp_ps(r.dir);
+    __m128 t1 = _mm_mul_ps(_mm_sub_ps(box.min, r.ori), invDir);
+    __m128 t2 = _mm_mul_ps(_mm_sub_ps(box.max, r.ori), invDir);
+    return _mm_min_ps(_mm_max_ps(t1, t2), ...);
+}</code></pre>
+            <div class="implementation-list">
+                <div class="implementation-item">Add to Game: Accelerate physics raycasts for auto-aim logic.</div>
+                <div class="implementation-item">Add to Game: High-speed frustum culling for massive foliage.</div>
+                <div class="implementation-item">Add to Game: Spatial partitioning (Octree) traversal optimization.
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

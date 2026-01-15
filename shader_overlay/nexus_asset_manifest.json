@@ -1,0 +1,100 @@
+{
+    "meta": {
+        "schema_version": "1.0.2",
+        "engine_target": "Unreal Engine 5.7",
+        "pbr_compliance": "glTF 2.0 / UE 5.3+",
+        "authoritative_references": {
+            "spline_rendering": "https://docs.spline.design",
+            "ue_material_system": "https://docs.unrealengine.com/5.3/en-US/materials-in-unreal-engine",
+            "gltf_standards": "https://www.khronos.org/gltf"
+        }
+    },
+    "asset_mappings": [
+        {
+            "id": "AX-001",
+            "name": "Tactical_Crate_Alpha",
+            "type": "StaticMesh",
+            "versions": [
+                {
+                    "ver": "1.0.4",
+                    "status": "Production",
+                    "targets": {
+                        "spline": {
+                            "url": "https://prod.spline.design/6Wq1Q7YAncaRUsIP/scene.splinecode",
+                            "features": [
+                                "interactivity",
+                                "state_transitions"
+                            ]
+                        },
+                        "gltf": {
+                            "path": "dist/models/crate_alpha_v1.glb",
+                            "compliance": "KHR_materials_unlit",
+                            "poly_count": 12400
+                        },
+                        "unreal": {
+                            "asset_path": "/Game/Antigravity/Meshes/SM_TacticalCrate_A",
+                            "material_domain": "Surface",
+                            "nanite": true,
+                            "lumen": "Optimized"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "id": "AX-002",
+            "name": "Neural_Interface_Bridge",
+            "type": "Blueprint/SDF",
+            "versions": [
+                {
+                    "ver": "2.1.0",
+                    "status": "Beta",
+                    "targets": {
+                        "spline": {
+                            "url": "https://prod.spline.design/placeholder/scene.splinecode",
+                            "features": [
+                                "clipping",
+                                "physics"
+                            ]
+                        },
+                        "gltf": {
+                            "path": "dist/models/bridge_procedural.glb",
+                            "compliance": "pbrMetallicRoughness",
+                            "poly_count": 45000
+                        },
+                        "unreal": {
+                            "asset_path": "/Game/Antigravity/Blueprints/BP_NeuralBridge",
+                            "material_domain": "Volume",
+                            "nanite": false,
+                            "lumen": "Real-time"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "id": "AX-003",
+            "name": "Crystal_Core_Volume",
+            "type": "VFX/Emissive",
+            "versions": [
+                {
+                    "ver": "0.9.5",
+                    "status": "Experimental",
+                    "targets": {
+                        "gltf": {
+                            "path": "dist/models/crystal_v9.glb",
+                            "compliance": "KHR_materials_emissive_strength",
+                            "poly_count": 8100
+                        },
+                        "unreal": {
+                            "asset_path": "/Game/Antigravity/VFX/SM_CrystalCore",
+                            "material_domain": "PostProcess",
+                            "nanite": true,
+                            "lumen": "High_Intensity"
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}

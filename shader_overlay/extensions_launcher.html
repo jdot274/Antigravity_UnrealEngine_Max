@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extensions Launcher</title>
+    <link rel="stylesheet" href="theme.css">
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: transparent;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+        }
+
+        #container {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(30, 30, 50, 0.95), rgba(20, 20, 35, 0.98));
+            backdrop-filter: blur(60px);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .search-bar {
+            padding: 20px 30px 10px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .search-input:focus {
+            border-color: rgba(59, 130, 246, 0.5);
+        }
+
+        .app-grid {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 20px;
+        }
+
+        .app-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+
+        .app-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .app-icon:active {
+            transform: scale(0.95);
+        }
+
+        .app-icon.hidden {
+            display: none;
+        }
+
+        .icon-box {
+            width: 60px;
+            height: 60px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 900;
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            margin-bottom: 6px;
+        }
+
+        .app-name {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.8);
+            text-align: center;
+            max-width: 70px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Category Colors */
+        .cat-python {
+            background: linear-gradient(135deg, #3776ab, #ffd43b);
+        }
+
+        .cat-js {
+            background: linear-gradient(135deg, #f7df1e, #323330);
+        }
+
+        .cat-git {
+            background: linear-gradient(135deg, #f05032, #ff7e5f);
+        }
+
+        .cat-docker {
+            background: linear-gradient(135deg, #0db7ed, #384d54);
+        }
+
+        .cat-ai {
+            background: linear-gradient(135deg, #8B5CF6, #EC4899);
+        }
+
+        .cat-react {
+            background: linear-gradient(135deg, #61dafb, #282c34);
+        }
+
+        .cat-cpp {
+            background: linear-gradient(135deg, #00599c, #004482);
+        }
+
+        .cat-java {
+            background: linear-gradient(135deg, #f89820, #5382a1);
+        }
+
+        .cat-theme {
+            background: linear-gradient(135deg, #ff6b6b, #c92a2a);
+        }
+
+        .cat-misc {
+            background: linear-gradient(135deg, #4b5563, #1f2937);
+        }
+
+        .cat-azure {
+            background: linear-gradient(135deg, #0078d4, #00bcf2);
+        }
+
+        .cat-firebase {
+            background: linear-gradient(135deg, #ffca28, #f57c00);
+        }
+
+        .cat-ue {
+            background: linear-gradient(135deg, #0e1128, #2563eb);
+        }
+
+        .cat-shader {
+            background: linear-gradient(135deg, #22c55e, #065f46);
+        }
+
+        .cat-claude {
+            background: linear-gradient(135deg, #d97706, #451a03);
+        }
+
+        .cat-mcp {
+            background: linear-gradient(135deg, #14b8a6, #0d9488);
+        }
+
+        .dock {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .dock-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+        }
+
+        .dock-dot.active {
+            background: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <div class="search-bar">
+            <input type="text" class="search-input" placeholder="Search 415 extensions..." id="search">
+        </div>
+        <div class="app-grid" id="grid"></div>
+        <div class="dock">
+            <div class="dock-dot active"></div>
+            <div class="dock-dot"></div>
+            <div class="dock-dot"></div>
+        </div>
+    </div>
+
+    <script>
+        const extensions = [
+            // AI & Claude
+            { id: "anthropic.claude-code", name: "Claude Code", cat: "claude" },
+            { id: "saoudrizwan.claude-dev", name: "Claude Dev", cat: "claude" },
+            { id: "github.copilot", name: "Copilot", cat: "ai" },
+            { id: "github.copilot-chat", name: "Copilot Chat", cat: "ai" },
+            { id: "google.geminicodeassist", name: "Gemini", cat: "ai" },
+            { id: "tabnine.tabnine-vscode", name: "Tabnine", cat: "ai" },
+            { id: "openai.chatgpt", name: "ChatGPT", cat: "ai" },
+
+            // MCP Servers
+            { id: "allansantos-dv.mcp-memory-server", name: "MCP Memory", cat: "mcp" },
+            { id: "amitpatole.mcp-marketplace", name: "MCP Market", cat: "mcp" },
+            { id: "ms-azuretools.vscode-azure-mcp-server", name: "Azure MCP", cat: "mcp" },
+            { id: "upstash.context7-mcp", name: "Context7", cat: "mcp" },
+
+            // Python
+            { id: "ms-python.python", name: "Python", cat: "python" },
+            { id: "ms-python.vscode-pylance", name: "Pylance", cat: "python" },
+            { id: "ms-python.debugpy", name: "Debugpy", cat: "python" },
+
+            // JS/React
+            { id: "esbenp.prettier-vscode", name: "Prettier", cat: "js" },
+            { id: "formulahendry.code-runner", name: "Code Runner", cat: "js" },
+            { id: "xabikos.reactsnippets", name: "React Snip", cat: "react" },
+            { id: "msjsdiag.vscode-react-native", name: "React Native", cat: "react" },
+
+            // Git
+            { id: "eamodio.gitlens", name: "GitLens", cat: "git" },
+            { id: "mhutchie.git-graph", name: "Git Graph", cat: "git" },
+            { id: "waderyan.gitblame", name: "Git Blame", cat: "git" },
+
+            // Docker/K8s
+            { id: "ms-azuretools.vscode-docker", name: "Docker", cat: "docker" },
+            { id: "ms-kubernetes-tools.vscode-kubernetes-tools", name: "Kubernetes", cat: "docker" },
+
+            // C++
+            { id: "ms-vscode.cpptools", name: "C/C++", cat: "cpp" },
+            { id: "llvm-vs-code-extensions.vscode-clangd", name: "Clangd", cat: "cpp" },
+            { id: "ms-vscode.cmake-tools", name: "CMake", cat: "cpp" },
+
+            // Java
+            { id: "redhat.java", name: "Java", cat: "java" },
+            { id: "vscjava.vscode-java-pack", name: "Java Pack", cat: "java" },
+            { id: "vmware.vscode-spring-boot", name: "Spring Boot", cat: "java" },
+
+            // Themes
+            { id: "zhuangtongfa.material-theme", name: "Material", cat: "theme" },
+            { id: "pkief.material-icon-theme", name: "Icons", cat: "theme" },
+            { id: "akamud.vscode-theme-onedark", name: "One Dark", cat: "theme" },
+
+            // Azure/Cloud
+            { id: "googlecloudtools.cloudcode", name: "Cloud Code", cat: "azure" },
+            { id: "ms-azuretools.vscode-azurefunctions", name: "Azure Func", cat: "azure" },
+
+            // Firebase
+            { id: "toba.vsfire", name: "VSFire", cat: "firebase" },
+            { id: "me-dutour-mathieu.vscode-firebase", name: "Firebase", cat: "firebase" },
+
+            // Unreal/Shaders
+            { id: "nilssoderman.ue-python", name: "UE Python", cat: "ue" },
+            { id: "openpixel.unreal-engine-4-helper", name: "UE Helper", cat: "ue" },
+            { id: "tiagodsp.uetools", name: "UE Tools", cat: "ue" },
+            { id: "slevesque.shader", name: "Shader", cat: "shader" },
+            { id: "stevensona.shader-toy", name: "ShaderToy", cat: "shader" },
+            { id: "awwsky.shadeview", name: "ShadeView", cat: "shader" },
+
+            // Misc Tools
+            { id: "ritwickdey.liveserver", name: "Live Server", cat: "misc" },
+            { id: "humao.rest-client", name: "REST Client", cat: "misc" },
+            { id: "vscodevim.vim", name: "Vim", cat: "misc" },
+            { id: "alefragnani.bookmarks", name: "Bookmarks", cat: "misc" },
+            { id: "wallabyjs.quokka-vscode", name: "Quokka", cat: "js" }
+        ];
+
+        const grid = document.getElementById('grid');
+        const search = document.getElementById('search');
+
+        function getInitials(name) {
+            return name.split(/[\s\-_]+/).map(w => w[0]).join('').substring(0, 2).toUpperCase();
+        }
+
+        function renderGrid(filter = '') {
+            grid.innerHTML = '';
+            const lowerFilter = filter.toLowerCase();
+
+            extensions.forEach(ext => {
+                if (filter && !ext.name.toLowerCase().includes(lowerFilter) && !ext.id.toLowerCase().includes(lowerFilter)) {
+                    return;
+                }
+
+                const div = document.createElement('div');
+                div.className = 'app-icon';
+                div.innerHTML = `
+                    <div class="icon-box cat-${ext.cat}">${getInitials(ext.name)}</div>
+                    <div class="app-name">${ext.name}</div>
+                `;
+                div.onclick = () => {
+                    // In a real scenario, this would trigger extension activation
+                    console.log('Launching:', ext.id);
+                };
+                grid.appendChild(div);
+            });
+        }
+
+        search.addEventListener('input', (e) => renderGrid(e.target.value));
+        renderGrid();
+    </script>
+</body>
+
+</html>

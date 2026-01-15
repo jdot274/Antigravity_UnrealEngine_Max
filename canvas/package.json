@@ -1,0 +1,12 @@
+{
+  "name": "antigravity-nexus-canvas",
+  "version": "1.0.0",
+  "description": "Desktop Canvas for Antigravity Nexus",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {
+    "electron": "^28.1.0"
+  }
+}

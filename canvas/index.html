@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Antigravity Nexus Canvas</title>
+    <style>
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-color: #ffffff;
+            --accent: #00ff88;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: rgba(20, 20, 20, 0.9);
+            /* Fallback */
+            color: var(--text-color);
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        #canvas {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.05) 1px, transparent 0);
+            background-size: 40px 40px;
+            overflow: auto;
+            padding: 40px;
+            box-sizing: border-box;
+        }
+
+        .card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 12px;
+            padding: 20px;
+            width: 300px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            animation: floatIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: inline-block;
+            vertical-align: top;
+            margin-right: 20px;
+        }
+
+        .card h2 {
+            margin-top: 0;
+            font-size: 1.2rem;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+            color: var(--accent);
+        }
+
+        .card p {
+            margin: 0;
+            line-height: 1.5;
+            font-size: 0.9rem;
+            opacity: 0.9;
+            white-space: pre-wrap;
+        }
+
+        .status-pill {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 8px 16px;
+            background: black;
+            border-radius: 20px;
+            font-size: 12px;
+            border: 1px solid #333;
+            color: #666;
+        }
+
+        .status-pill.connected {
+            color: #00ff88;
+            border-color: #00ff88;
+        }
+
+        @keyframes floatIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="canvas">
+        <!-- Cards will appear here -->
+        <div class="card">
+            <h2>Welcome to Nexus</h2>
+            <p>Waiting for input from Antigravity IDE...</p>
+        </div>
+    </div>
+    <div id="status" class="status-pill">Disconnected</div>
+
+    <script>
+        const statusEl = document.getElementById('status');
+        const canvasEl = document.getElementById('canvas');
+        let ws;
+
+        function connect() {
+            ws = new WebSocket('ws://localhost:3001');
+
+            ws.onopen = () => {
+                statusEl.textContent = 'Nexus Bridge Connected';
+                statusEl.classList.add('connected');
+            };
+
+            ws.onclose = () => {
+                statusEl.textContent = 'Disconnected - Retrying...';
+                statusEl.classList.remove('connected');
+                setTimeout(connect, 3000);
+            };
+
+            ws.onmessage = (event) => {
+                const {
+                    type,
+                    payload
+                } = JSON.parse(event.data);
+
+                if (type === 'add_card') {
+                    createCard(payload);
+                } else if (type === 'clear_canvas') {
+                    canvasEl.innerHTML = '';
+                }
+            };
+        }
+
+        function createCard(data) {
+            const div = document.createElement('div');
+            div.className = 'card';
+            // Add random rotation slightly for organic feel
+            // const rot = (Math.random() - 0.5) * 4;
+            // div.style.transform = `rotate(${rot}deg)`;
+
+            div.innerHTML = `
+          <h2>${data.title}</h2>
+          <p>${data.content}</p>
+        `;
+
+            // Use Prepend to show newest first? Or Append? Let's use PREPEND to show top left.
+            canvasEl.prepend(div);
+        }
+
+        connect();
+    </script>
+</body>
+
+</html>

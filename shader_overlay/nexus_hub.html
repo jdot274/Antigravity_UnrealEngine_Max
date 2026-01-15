@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Antigravity_UnrealEngine - Unified Master Editor</title>
+    <style>
+        :root {
+            --accent: #3b82f6;
+            --bg-dark: #050505;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-dark);
+            color: white;
+            font-family: var(--font-main);
+            overflow: hidden;
+        }
+
+        /* SHADER BACKGROUND */
+        #bg-iframe {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            z-index: -1;
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        .layout {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* SIDEBAR */
+        nav {
+            width: 60px;
+            height: 100%;
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+            z-index: 100;
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+
+        nav:hover {
+            width: 200px;
+        }
+
+        .nav-item {
+            width: 100%;
+            padding: 15px 0;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            cursor: pointer;
+            transition: 0.2s;
+            position: relative;
+            color: rgba(255, 255, 255, 0.4);
+            text-decoration: none;
+        }
+
+        .nav-item:hover {
+            background: rgba(59, 130, 246, 0.1);
+            color: white;
+        }
+
+        .nav-item.active {
+            color: var(--accent);
+            background: rgba(59, 130, 246, 0.15);
+        }
+
+        .nav-item i {
+            width: 60px;
+            text-align: center;
+            flex-shrink: 0;
+            font-size: 18px;
+        }
+
+        .nav-label {
+            white-space: nowrap;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        nav:hover .nav-label {
+            opacity: 1;
+        }
+
+        /* MAIN CONTENT */
+        main {
+            flex: 1;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #view-container {
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        #view-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* HEADER */
+        header {
+            position: absolute;
+            top: 0;
+            left: 60px;
+            right: 0;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 40px;
+            justify-content: space-between;
+            z-index: 50;
+            background: linear-gradient(to bottom, rgba(5, 5, 5, 0.8), transparent);
+        }
+
+        .engine-status {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .pill {
+            padding: 4px 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 100px;
+            font-size: 9px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            color: var(--accent);
+        }
+
+        .version {
+            opacity: 0.4;
+            font-size: 9px;
+        }
+
+        /* AI CHAT INTERFACE */
+        #ai-chat-toggle {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
+            z-index: 1000;
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        #ai-chat-toggle:hover {
+            transform: scale(1.1);
+            background: #2563eb;
+        }
+
+        #chat-panel {
+            position: absolute;
+            bottom: 100px;
+            right: 30px;
+            width: 380px;
+            height: 500px;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(40px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            display: none;
+            flex-direction: column;
+            z-index: 999;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            overflow: hidden;
+        }
+
+        .chat-header {
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .msg {
+            max-width: 85%;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .msg.user {
+            align-self: flex-end;
+            background: var(--accent);
+            color: white;
+            border-bottom-right-radius: 2px;
+        }
+
+        .msg.ai {
+            align-self: flex-start;
+            background: rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.9);
+            border-bottom-left-radius: 2px;
+        }
+
+        .chat-input-area {
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.02);
+            display: flex;
+            gap: 10px;
+        }
+
+        #chat-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            padding: 10px;
+            color: white;
+            font-family: inherit;
+            outline: none;
+        }
+
+        #chat-input:focus {
+            border-color: var(--accent);
+        }
+    </style>
+    <link rel="stylesheet" href="theme.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Persistent Shader Background -->
+    <iframe id="bg-iframe" src="index.html"></iframe>
+
+    <div class="layout">
+        <nav id="sidebar">
+            <a href="#" class="nav-item active" data-src="editor_ui.html">
+                <i class="fas fa-cube"></i>
+                <span class="nav-label">Main Editor</span>
+            </a>
+            <a href="#" class="nav-item" data-src="asset_explorer.html">
+                <i class="fas fa-folder-open"></i>
+                <span class="nav-label">Asset Registry</span>
+            </a>
+            <a href="#" class="nav-item" data-src="sim_vs_stream.html">
+                <i class="fas fa-wave-square"></i>
+                <span class="nav-label">Sim vs Stream</span>
+            </a>
+            <a href="#" class="nav-item" data-src="build_monitor.html">
+                <i class="fas fa-microchip"></i>
+                <span class="nav-label">Build Monitor</span>
+            </a>
+            <a href="#" class="nav-item" data-src="spline.html">
+                <i class="fas fa-bezier-curve"></i>
+                <span class="nav-label">Spline View</span>
+            </a>
+            <a href="#" class="nav-item" data-src="level_stream.html">
+                <i class="fas fa-layer-group"></i>
+                <span class="nav-label">Level Stream</span>
+            </a>
+            <a href="#" class="nav-item" data-src="native_stack_viz.html">
+                <i class="fas fa-server"></i>
+                <span class="nav-label">System Viz</span>
+            </a>
+            <div style="margin-top: auto; width: 100%; border-top: 1px solid rgba(255,255,255,0.05); padding: 10px 0;">
+                <a href="#" class="nav-item" data-src="git_timemachine.html">
+                    <i class="fas fa-history"></i>
+                    <span class="nav-label">Time Machine</span>
+                </a>
+            </div>
+        </nav>
+
+        <header>
+            <div class="engine-status">
+                <div class="pill">REAL-TIME METAL 3 ENABLED</div>
+                <div class="version">ANTIGRAVITY_UNREALENGINE V1.1.0</div>
+            </div>
+            <div id="authoritative-info" style="font-size: 10px; color: rgba(255,255,255,0.3); font-weight: bold;">
+                UE 5.7 TARGET • glTF COMPLIANT
+            </div>
+        </header>
+
+        <main>
+            <div id="view-container">
+                <iframe id="view-iframe" src="editor_ui.html"></iframe>
+            </div>
+        </main>
+    </div>
+
+    <!-- AI CHAT PANEL -->
+    <div id="chat-panel">
+        <div class="chat-header">
+            <div style="font-size: 11px; font-weight: 900; letter-spacing: 1px;">GEMINI NLP INTERFACE</div>
+            <i class="fas fa-times" id="close-chat" style="cursor: pointer; opacity: 0.5;"></i>
+        </div>
+        <div id="chat-messages">
+            <div class="msg ai">Welcome, Engineer. The Nexus Bridge is listening. How can I assist with the project?
+            </div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="chat-input" placeholder="Natural language command...">
+            <button id="send-btn"
+                style="background: var(--accent); border: none; border-radius: 8px; width: 40px; color: white;"><i
+                    class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <div id="ai-chat-toggle">
+        <i class="fas fa-comment-dots" style="color: white; font-size: 24px;"></i>
+    </div>
+
+    <script>
+        const navItems = document.querySelectorAll('.nav-item');
+        const viewIframe = document.getElementById('view-iframe');
+
+        // Chat Toggle
+        const chatToggle = document.getElementById('ai-chat-toggle');
+        const chatPanel = document.getElementById('chat-panel');
+        const closeChat = document.getElementById('close-chat');
+
+        chatToggle.onclick = () => chatPanel.style.display = chatPanel.style.display === 'flex' ? 'none' : 'flex';
+        closeChat.onclick = () => chatPanel.style.display = 'none';
+
+        // Chat Logic
+        const chatInput = document.getElementById('chat-input');
+        const chatMessages = document.getElementById('chat-messages');
+        const sendBtn = document.getElementById('send-btn');
+
+        async function sendMessage() {
+            const text = chatInput.value.trim();
+            if (!text) return;
+
+            // Add User Message
+            addMessage(text, 'user');
+            chatInput.value = '';
+
+            try {
+                const response = await fetch('http://localhost:3002/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: text, context: { source: 'nexus_hub' } })
+                });
+                const data = await response.json();
+                addMessage(data.response, 'ai');
+            } catch (e) {
+                addMessage("❌ Connection failed. Ensure bridge/server.js is running on port 3002.", 'ai');
+            }
+        }
+
+        function addMessage(text, who) {
+            const div = document.createElement('div');
+            div.className = `msg ${who}`;
+            div.innerText = text;
+            chatMessages.appendChild(div);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        sendBtn.onclick = sendMessage;
+        chatInput.onkeypress = (e) => { if (e.key === 'Enter') sendMessage(); };
+
+        navItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+
+                const src = item.getAttribute('data-src');
+                if (src) {
+                    // Update UI
+                    navItems.forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+
+                    // Transition Animation
+                    viewIframe.style.opacity = "0";
+                    setTimeout(() => {
+                        viewIframe.src = src;
+                        viewIframe.onload = () => {
+                            viewIframe.style.opacity = "1";
+                            viewIframe.style.transition = "opacity 0.3s ease";
+                        };
+                    }, 100);
+                }
+            });
+        });
+
+        // Bridge for cross-iframe communication if needed
+        window.addEventListener('message', (event) => {
+            // Handle internal Nexus commands
+            console.log("Nexus Hub received message:", event.data);
+        });
+    </script>
+</body>
+
+</html>

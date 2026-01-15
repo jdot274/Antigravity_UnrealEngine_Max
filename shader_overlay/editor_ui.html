@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Antigravity Unified Editor</title>
+    <link rel="stylesheet" href="theme.css">
+    <style>
+        :root {
+            --bg-deep: #0d1117;
+            --bg-panel: #161b22;
+            --accent: #1f6feb;
+            --accent-bright: #58a6ff;
+            --border: #30363d;
+            --text: #c9d1d9;
+            --text-dim: #8b949e;
+        }
+
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: var(--bg-deep);
+            font-family: 'Inter', -apple-system, system-ui, sans-serif;
+            color: var(--text);
+        }
+
+        #editor-shell {
+            display: grid;
+            grid-template-columns: 280px 1fr 320px;
+            grid-template-rows: 52px 1fr 280px 24px;
+            height: 100vh;
+            width: 100vw;
+            border: 1px solid var(--border);
+        }
+
+        /* --- UI COMPONENTS --- */
+        .toolbar {
+            grid-column: 1 / -1;
+            background: var(--bg-panel);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            gap: 12px;
+        }
+
+        .logo {
+            font-weight: 900;
+            color: var(--accent-bright);
+            letter-spacing: 2px;
+            font-size: 14px;
+            margin-right: 20px;
+        }
+
+        .tool-btn {
+            background: #21262d;
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 6px 16px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .tool-btn:hover {
+            background: var(--border);
+            color: white;
+            border-color: var(--text-dim);
+        }
+
+        .tool-btn.active {
+            background: var(--accent);
+            border-color: var(--accent-bright);
+            color: white;
+        }
+
+        .panel {
+            background: var(--bg-deep);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            padding: 10px 15px;
+            font-size: 10px;
+            font-weight: 800;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            background: var(--bg-panel);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .scroll-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0;
+        }
+
+        .list-item {
+            padding: 8px 15px;
+            font-size: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .list-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+        }
+
+        .list-item i {
+            color: var(--accent-bright);
+            font-size: 10px;
+        }
+
+        /* --- VIEWPORT --- */
+        #viewport-container {
+            grid-row: 2 / 3;
+            grid-column: 2 / 3;
+            position: relative;
+            background: #000;
+            cursor: crosshair;
+        }
+
+        #vp-canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            outline: none;
+        }
+
+        #crosshair {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+
+        /* --- BOTTOM TRAY --- */
+        .bottom-tray {
+            grid-column: 1 / -1;
+            grid-row: 3 / 4;
+            background: var(--bg-deep);
+            border-top: 1px solid var(--border);
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+        }
+
+        .tray-panel {
+            background: var(--bg-panel);
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--border);
+        }
+
+        .iframe-container {
+            flex: 1;
+            border: none;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+        }
+
+        .status-bar {
+            grid-column: 1 / -1;
+            background: var(--accent);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            justify-content: space-between;
+        }
+
+        /* Detail Inputs */
+        .prop-row {
+            padding: 10px 15px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .prop-label {
+            font-size: 11px;
+            color: var(--text-dim);
+        }
+
+        .prop-val {
+            background: #000;
+            border: 1px solid var(--border);
+            color: var(--accent-bright);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+            font-size: 11px;
+            width: 80px;
+            text-align: right;
+        }
+    </style>
+    <script src="three.min.js"></script>
+</head>
+
+<body>
+    <div id="editor-shell">
+        <div class="toolbar">
+            <div class="logo">ANTIGRAVITY v5.7</div>
+            <button class="tool-btn active" onclick="console.log('Select Mode')">SELECT</button>
+            <button class="tool-btn" onclick="console.log('Build Task Started')">BUILD</button>
+            <button class="tool-btn" onclick="console.log('Cooking Content...')">COOK</button>
+            <button class="tool-btn"
+                style="background: #238636; border-color: #2ea043; margin-left: auto; color: white;">PROJECT
+                PLAY</button>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">World Outliner <span>+</span></div>
+            <div class="scroll-content" id="outliner">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+
+        <div id="viewport-container">
+            <div id="crosshair"></div>
+            <!-- Canvas target -->
+        </div>
+
+        <div class="panel" style="border-right: none; border-left: 1px solid var(--border);">
+            <div class="panel-header">Details</div>
+            <div class="scroll-content" id="details">
+                <div class="prop-row">
+                    <span class="prop-label">Location X</span>
+                    <span class="prop-val">0.0</span>
+                </div>
+                <div class="prop-row">
+                    <span class="prop-label">Bounce Rate</span>
+                    <span class="prop-val">0.85</span>
+                </div>
+                <div class="prop-row">
+                    <span class="prop-label">Gravity</span>
+                    <span class="prop-val">-0.03</span>
+                </div>
+                <div style="padding: 20px; font-size: 10px; color: var(--text-dim); line-height: 1.5;">
+                    METAL 3 NATIVE RENDERING<br>
+                    SHADER MODEL 6.0<br>
+                    UAT PACKAGING: IDLE
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-tray">
+            <div class="tray-panel">
+                <div class="panel-header">Git History</div>
+                <iframe class="iframe-container" src="git_timemachine.html"></iframe>
+            </div>
+            <div class="tray-panel">
+                <div class="panel-header">Build Monitor</div>
+                <iframe class="iframe-container" src="build_monitor.html"></iframe>
+            </div>
+            <div class="tray-panel">
+                <div class="panel-header">Extensions Launcher</div>
+                <iframe class="iframe-container" src="extensions_launcher.html"></iframe>
+            </div>
+            <div class="tray-panel">
+                <div class="panel-header">Performance Metrics</div>
+                <iframe class="iframe-container" src="java_monitor.html"></iframe>
+            </div>
+        </div>
+
+        <div class="status-bar">
+            <span>READY • MAC_METAL_3 • 110° FOV • 50M COURT</span>
+            <span>HYBRID COMPILER ACTIVE</span>
+        </div>
+    </div>
+
+    <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
+    <script>
+        var bridge = null;
+        new QWebChannel(qt.webChannelTransport, function (channel) {
+            bridge = channel.objects.bridge;
+            console.log("Simulator Bridge Linked");
+        });
+
+        // HANDLE REMOTE COMMANDS FROM CONTROLLER
+        function handleEngineCommand(cmd) {
+            console.log("SIMULATOR RECV:", cmd);
+            const action = cmd.action;
+            const statusBar = document.querySelector('.status-bar');
+
+            if (action === 'spawn_tennis') {
+                const bGeo = new THREE.SphereGeometry(0.15, 32, 32);
+                const color = Math.random() * 0xffffff;
+                const newBall = addActor(`Ball_${Core.objects.length}`, bGeo, color, [Math.random() * 4 - 2, 10, Math.random() * 2 - 2]);
+                updateOutliner();
+            }
+
+            if (action === 'hot_reload') {
+                statusBar.style.background = '#238636';
+                statusBar.innerHTML = 'RECOMPILING NATIVE MODULES... [0%]';
+                let progress = 0;
+                const iv = setInterval(() => {
+                    progress += 10;
+                    statusBar.innerHTML = `RECOMPILING NATIVE MODULES... [${progress}%]`;
+                    if (progress >= 100) {
+                        clearInterval(iv);
+                        statusBar.style.background = '#1f6feb';
+                        statusBar.innerHTML = 'COMPILATION SUCCESSFUL • RELOADED METAL 3 BUFFERS';
+                    }
+                }, 100);
+            }
+
+            if (action === 'new_level') {
+                Core.objects.forEach(o => {
+                    if (o.userData.name !== 'TennisCourt_50m' && o.userData.name !== 'PlayerRacket') {
+                        Core.scene.remove(o);
+                    }
+                });
+                Core.objects = Core.objects.filter(o => o.userData.name === 'TennisCourt_50m' || o.userData.name === 'PlayerRacket');
+                updateOutliner();
+                statusBar.innerHTML = 'NEW LEVEL INITIALIZED';
+            }
+
+            if (action === 'show_status') {
+                statusBar.innerHTML = cmd.msg;
+                statusBar.style.background = '#f97316';
+                setTimeout(() => {
+                    statusBar.style.background = '#1f6feb';
+                }, 3000);
+            }
+
+            if (action === 'view_outliner' || action === 'view_details') {
+                const panelType = action === 'view_outliner' ? 'World Outliner' : 'Details';
+                statusBar.innerHTML = `FOCUSING PANEL: ${panelType}`;
+                // Highlight the panel in UI
+                const panels = document.querySelectorAll('.panel-header');
+                panels.forEach(ph => {
+                    if (ph.innerText.includes(panelType)) {
+                        ph.style.color = '#58a6ff';
+                        setTimeout(() => ph.style.color = '', 2000);
+                    }
+                });
+            }
+        }
+
+        const Core = {
+            scene: null, camera: null, renderer: null,
+            objects: [], physics: null,
+            mouse: new THREE.Vector2(),
+            raycaster: new THREE.Raycaster()
+        };
+
+        function init() {
+            const container = document.getElementById('viewport-container');
+            if (!container) return;
+
+            // Scene setup
+            Core.scene = new THREE.Scene();
+            Core.scene.background = new THREE.Color(0x010409);
+
+            // FPV CAM - Extreme 110 FOV
+            Core.camera = new THREE.PerspectiveCamera(110, container.clientWidth / container.clientHeight, 0.1, 1000);
+            Core.camera.position.set(0, 1.7, 24); // Baseline
+            Core.camera.lookAt(0, 1.0, 0);
+
+            Core.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            Core.renderer.setSize(container.clientWidth, container.clientHeight);
+            Core.renderer.domElement.id = 'vp-canvas';
+            container.appendChild(Core.renderer.domElement);
+
+            // Level Essentials
+            Core.scene.add(new THREE.GridHelper(50, 20, 0x30363d, 0x161b22));
+            const amb = new THREE.AmbientLight(0xffffff, 0.6);
+            Core.scene.add(amb);
+            const sun = new THREE.DirectionalLight(0xffffff, 1);
+            sun.position.set(10, 20, 10);
+            Core.scene.add(sun);
+
+            // --- ACTORS ---
+            // 1. 50m Court
+            addActor("TennisCourt_50m", new THREE.PlaneGeometry(12, 50), 0x2b4290, [0, -0.05, 0], [-Math.PI / 2, 0, 0]);
+
+            // 2. Neon Tennis Ball
+            const ballGeo = new THREE.SphereGeometry(0.15, 32, 32);
+            const ball = addActor("TennisBall_01", ballGeo, 0xd0ff00, [0, 8, 0]);
+
+            // 3. Racket (Attached to mouse conceptually)
+            const racketGeo = new THREE.TorusGeometry(0.4, 0.04, 12, 48);
+            const racket = addActor("PlayerRacket", racketGeo, 0x58a6ff, [0.5, 1.2, 22]);
+
+            // Physics Init
+            Core.physics = {
+                ball: ball,
+                velocity: new THREE.Vector3(0, 0, 0),
+                gravity: -0.03, // Heavy Gravity
+                bounce: 0.88,
+                friction: 0.99
+            };
+
+            // Events
+            window.addEventListener('resize', handleResize);
+            container.addEventListener('mousemove', handleMouseMove);
+
+            render();
+            updateOutliner();
+        }
+
+        function addActor(name, geo, color, pos = [0, 0, 0], rot = [0, 0, 0]) {
+            const mat = new THREE.MeshStandardMaterial({
+                color: color,
+                metalness: 0.7,
+                roughness: 0.2,
+                emissive: color,
+                emissiveIntensity: 0.1
+            });
+            const mesh = new THREE.Mesh(geo, mat);
+            mesh.position.set(pos[0], pos[1], pos[2]);
+            mesh.rotation.set(rot[0], rot[1], rot[2]);
+            mesh.userData = { name: name };
+            Core.scene.add(mesh);
+            Core.objects.push(mesh);
+            return mesh;
+        }
+
+        function handleMouseMove(e) {
+            const rect = e.target.getBoundingClientRect();
+            Core.mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+            Core.mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+            // Move racket based on mouse
+            const racket = Core.objects.find(o => o.userData.name === "PlayerRacket");
+            if (racket) {
+                racket.position.x = Core.mouse.x * 5;
+                racket.position.y = (Core.mouse.y * 3) + 1.5;
+            }
+        }
+
+        function handleResize() {
+            const container = document.getElementById('viewport-container');
+            if (!container) return;
+            Core.camera.aspect = container.clientWidth / container.clientHeight;
+            Core.camera.updateProjectionMatrix();
+            Core.renderer.setSize(container.clientWidth, container.clientHeight);
+        }
+
+        function updateOutliner() {
+            const list = document.getElementById('outliner');
+            if (!list) return;
+            list.innerHTML = Core.objects.map(obj => `
+                <div class="list-item" onclick="console.log('Selected: ${obj.userData.name}')">
+                    <span style="width:8px; height:8px; background:${obj.material.color.getStyle()}; border-radius:50%"></span>
+                    ${obj.userData.name}
+                </div>
+            `).join('');
+        }
+
+        function render() {
+            requestAnimationFrame(render);
+
+            // PHYSICS ENGINE
+            if (Core.physics && Core.physics.ball) {
+                const b = Core.physics.ball;
+                const p = Core.physics;
+
+                p.velocity.y += p.gravity;
+                b.position.add(p.velocity);
+
+                // Floor Hit
+                if (b.position.y < 0.15) {
+                    b.position.y = 0.15;
+                    p.velocity.y *= -p.bounce;
+                    p.velocity.x *= p.friction;
+                    p.velocity.z *= p.friction;
+                }
+
+                // Racket Hit (Conceptual Detection)
+                const racket = Core.objects.find(o => o.userData.name === "PlayerRacket");
+                if (racket) {
+                    const dist = b.position.distanceTo(racket.position);
+                    if (dist < 0.7) {
+                        p.velocity.z = -0.6; // Hit it back!
+                        p.velocity.y += 0.2;
+                        p.velocity.x += (b.position.x - racket.position.x) * 0.5;
+                    }
+                }
+
+                // Auto-Reset if out of bounds
+                if (b.position.z < -30 || b.position.z > 30) {
+                    b.position.set(0, 8, 0);
+                    p.velocity.set(0, 0, 0.1);
+                }
+            }
+
+            Core.renderer.render(Core.scene, Core.camera);
+        }
+
+        window.onload = init;
+    </script>
+</body>
+
+</html>

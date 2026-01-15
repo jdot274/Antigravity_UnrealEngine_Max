@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eagle Eye Sonar Tracking</title>
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: transparent;
+            font-family: 'Inter', sans-serif;
+        }
+
+        #container {
+            width: 95%;
+            height: 95%;
+            border-radius: 24px;
+            overflow: hidden;
+            position: relative;
+            background: radial-gradient(circle at center, #0a1525 0%, #050a10 100%);
+            backdrop-filter: blur(40px);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            box-shadow: 0 0 60px rgba(0, 255, 255, 0.15);
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .eagle-eye-hud {
+            position: absolute;
+            top: 25px;
+            left: 25px;
+            color: #00ffff;
+            font-family: 'JetBrains Mono', monospace;
+            pointer-events: none;
+            letter-spacing: 1px;
+        }
+
+        .header {
+            font-size: 14px;
+            font-weight: 800;
+            margin-bottom: 5px;
+            text-shadow: 0 0 10px #00ffff;
+        }
+
+        .stat-line {
+            font-size: 9px;
+            opacity: 0.8;
+        }
+
+        .ball-speed {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            background: rgba(0, 255, 255, 0.1);
+            padding: 10px 15px;
+            border-radius: 8px;
+            border-left: 3px solid #00ffff;
+            text-align: right;
+            color: #00ffff;
+        }
+
+        .speed-val {
+            font-size: 18px;
+            font-weight: 900;
+        }
+
+        .speed-unit {
+            font-size: 10px;
+            opacity: 0.6;
+        }
+    </style>
+    <script src="three.min.js"></script>
+<link rel="stylesheet" href="theme.css"></head>
+
+<body>
+    <div id="container">
+        <div class="eagle-eye-hud">
+            <div class="header">EAGLE-EYE // SONAR PROJECTION</div>
+            <div class="stat-line">STATUS: TRACKING_ACTIVE</div>
+            <div class="stat-line">STREAM: LIVE_RENDER_VIRTUAL</div>
+            <div class="stat-line" id="coords">X: 0.00 Y: 0.00 Z: 0.00</div>
+        </div>
+        <div class="ball-speed">
+            <div class="speed-unit">VELOCITY</div>
+            <div class="speed-val" id="speed">184</div>
+            <div class="speed-unit">KM/H</div>
+        </div>
+        <canvas id="sonarCanvas"></canvas>
+    </div>
+
+    <script>
+        window.addEventListener('load', () => {
+            const canvas = document.getElementById('sonarCanvas');
+            const scene = new THREE.Scene();
+            // Higher FOV for cinematic feel
+            const camera = new THREE.PerspectiveCamera(45, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+
+            // Court (Professional Layout)
+            const courtGroup = new THREE.Group();
+
+            // Floor
+            const courtGeo = new THREE.PlaneGeometry(10, 20);
+            const courtMat = new THREE.MeshBasicMaterial({ color: 0x1e3a5f, transparent: true, opacity: 0.4 });
+            const court = new THREE.Mesh(courtGeo, courtMat);
+            court.rotation.x = -Math.PI / 2;
+            courtGroup.add(court);
+
+            // Lines
+            const lineMat = new THREE.LineBasicMaterial({ color: 0x00ffff, transparent: true, opacity: 0.8 });
+            const edgeGeo = new THREE.EdgesGeometry(new THREE.BoxBufferGeometry(10, 0, 20));
+            const boundaryLines = new THREE.LineSegments(edgeGeo, lineMat);
+            boundaryLines.position.y = 0.02;
+            courtGroup.add(boundaryLines);
+
+            // Middle Line & Service Box simulator
+            const midLineGeo = new THREE.PlaneGeometry(10, 0.1);
+            const midLine = new THREE.Mesh(midLineGeo, new THREE.MeshBasicMaterial({ color: 0x00ffff, transparent: true, opacity: 0.8 }));
+            midLine.rotation.x = -Math.PI / 2;
+            midLine.position.y = 0.03;
+            courtGroup.add(midLine);
+
+            scene.add(courtGroup);
+
+            // Sonar Pulse Shader
+            const sonarUniforms = { u_time: { value: 0 } };
+            const sonarMat = new THREE.ShaderMaterial({
+                uniforms: sonarUniforms,
+                transparent: true,
+                vertexShader: `varying vec3 vPos; void main() { vPos = position; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
+                fragmentShader: `
+                    uniform float u_time;
+                    varying vec3 vPos;
+                    void main() {
+                        float dist = length(vPos.xz);
+                        float pulse = fract(dist * 0.4 - u_time * 1.5);
+                        float alpha = smoothstep(0.45, 0.5, pulse) * smoothstep(0.55, 0.5, pulse);
+                        gl_FragColor = vec4(0.0, 1.0, 1.0, alpha * 0.5);
+                    }
+                `
+            });
+            const pulsePlane = new THREE.Mesh(new THREE.PlaneGeometry(40, 40), sonarMat);
+            pulsePlane.rotation.x = -Math.PI / 2;
+            pulsePlane.position.y = -0.1;
+            scene.add(pulsePlane);
+
+            // Objects
+            const ball = new THREE.Mesh(new THREE.SphereGeometry(0.2, 24, 24), new THREE.MeshBasicMaterial({ color: 0xffff00 }));
+            scene.add(ball);
+
+            // Rackets as "racket cylinders"
+            const racketA = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.4, 0.1, 32), new THREE.MeshBasicMaterial({ color: 0x00ffff, wireframe: true }));
+            const racketB = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.4, 0.1, 32), new THREE.MeshBasicMaterial({ color: 0xff00ff, wireframe: true }));
+            racketA.rotation.x = Math.PI / 2;
+            racketB.rotation.x = Math.PI / 2;
+            scene.add(racketA);
+            scene.add(racketB);
+
+            // Ball Trail
+            const trailPoints = [];
+            const trailGeo = new THREE.BufferGeometry();
+            const trailMat = new THREE.LineBasicMaterial({ color: 0xffff00, transparent: true, opacity: 0.6 });
+            const trail = new THREE.Line(trailGeo, trailMat);
+            scene.add(trail);
+
+            // Diagonal Side View (Isometric/Cinematic)
+            camera.position.set(12, 12, 12);
+            camera.lookAt(0, 0, 0);
+
+            const coordText = document.getElementById('coords');
+            const speedText = document.getElementById('speed');
+
+            function animate(time) {
+                const t = time * 0.001;
+                sonarUniforms.u_time.value = t;
+
+                // Subtle Camera Movement
+                camera.position.x = 12 + Math.sin(t * 0.1) * 2;
+                camera.lookAt(0, 0, 0);
+
+                // Ball Movement (Eagle Eye simulation)
+                ball.position.x = Math.sin(t * 2) * 4;
+                ball.position.z = Math.cos(t * 1.8) * 9;
+                ball.position.y = Math.abs(Math.sin(t * 4)) * 4;
+
+                // Racket Cylinders following the ball logic
+                racketA.position.x = ball.position.x * 0.8;
+                racketA.position.z = 9;
+                racketB.position.x = -ball.position.x * 0.8;
+                racketB.position.z = -9;
+
+                // Update Trail
+                trailPoints.push(ball.position.clone());
+                if (trailPoints.length > 40) trailPoints.shift();
+                trailGeo.setFromPoints(trailPoints);
+
+                // UI Updating
+                coordText.innerText = `X: ${ball.position.x.toFixed(2)} Y: ${ball.position.y.toFixed(2)} Z: ${ball.position.z.toFixed(2)}`;
+                speedText.innerText = Math.floor(190 + Math.sin(t * 8) * 15);
+
+                renderer.render(scene, camera);
+                requestAnimationFrame(animate);
+            }
+            animate(0);
+        });
+    </script>
+</body>
+
+</html>

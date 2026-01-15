@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Java Spring Monitor</title>
+    <link rel="stylesheet" href="theme.css">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        #overlay {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: var(--warning);
+            font-family: 'JetBrains Mono';
+            font-size: 10px;
+        }
+    </style>
+    <script src="three.min.js"></script>
+</head>
+
+<body>
+    <div id="overlay">JVM HEAP MEMORY • ACTUATOR STREAM</div>
+    <script>
+        // Simple 3D bar graph visualization for JVM metrics
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        const bars = [];
+        const maxBars = 20;
+        const color = new THREE.Color(0xFFCB6B); // Warning color from theme
+
+        for (let i = 0; i < maxBars; i++) {
+            const geo = new THREE.BoxGeometry(0.5, 1, 0.5);
+            const mat = new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: 0.8 });
+            const mesh = new THREE.Mesh(geo, mat);
+            mesh.position.x = (i - maxBars / 2) * 0.8;
+            scene.add(mesh);
+            bars.push(mesh);
+        }
+
+        camera.position.z = 10;
+        camera.position.y = 2;
+        camera.lookAt(0, 0, 0);
+
+        function animate() {
+            requestAnimationFrame(animate);
+            // Simulate live Spring Boot Actuator data stream
+            const time = Date.now() * 0.005;
+            bars.forEach((bar, i) => {
+                const h = Math.abs(Math.sin(time + i * 0.2) * 4) + 0.5;
+                bar.scale.y = h;
+                bar.position.y = h / 2 - 2;
+                bar.material.color.setHSL((i / maxBars) * 0.1 + 0.1, 1.0, 0.5);
+            });
+            renderer.render(scene, camera);
+        }
+        animate();
+    </script>
+</body>
+
+</html>

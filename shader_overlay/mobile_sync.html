@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Mobile Sync</title>
+    <link rel="stylesheet" href="theme.css">
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        .qr-box {
+            width: 150px;
+            height: 150px;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .status {
+            margin-top: 20px;
+            color: var(--accent);
+            font-family: 'JetBrains Mono';
+            font-size: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header" style="position: absolute; top:0; width:100%; padding:10px;">MOBILE 6DOF CONTROLLER</div>
+    <div class="qr-box">
+        <!-- Placeholder QR -->
+        <svg viewBox="0 0 100 100" width="100%" height="100%">
+            <rect x="10" y="10" width="30" height="30" fill="black" />
+            <rect x="60" y="10" width="30" height="30" fill="black" />
+            <rect x="10" y="60" width="30" height="30" fill="black" />
+            <rect x="50" y="50" width="10" height="10" fill="black" />
+            <rect x="70" y="70" width="20" height="10" fill="black" />
+        </svg>
+    </div>
+    <div class="status">● LISTENING ON PORT 5500</div>
+</body>
+
+</html>

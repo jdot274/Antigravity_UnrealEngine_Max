@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UE Project Launcher</title>
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: transparent;
+            font-family: 'Inter', sans-serif;
+            color: white;
+        }
+
+        #container {
+            width: 95%;
+            height: 95%;
+            background: rgba(10, 10, 15, 0.92);
+            backdrop-filter: blur(50px);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 20px;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            color: #3b82f6;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            font-size: 9px;
+            color: rgba(255, 255, 255, 0.4);
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        .project-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .project-btn {
+            display: block;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            text-align: left;
+            color: #94a3b8;
+            transition: all 0.2s;
+        }
+
+        .project-btn:hover {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: #3b82f6;
+            color: white;
+        }
+
+        .project-name {
+            font-weight: bold;
+            font-size: 11px;
+        }
+
+        .project-path {
+            font-size: 8px;
+            opacity: 0.5;
+            margin-top: 3px;
+        }
+
+        .footer {
+            font-size: 8px;
+            opacity: 0.3;
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+<link rel="stylesheet" href="theme.css"></head>
+
+<body>
+    <div id="container">
+        <div class="header">TACTICAL INSTANCE</div>
+        <div class="subtitle">Select UE5 Project to Launch</div>
+        <div class="project-list">
+            <button class="project-btn" onclick="launch('ProjectAnywhereXR')">
+                <div class="project-name">ProjectAnywhereXR</div>
+                <div class="project-path">.uproject | XR/VR Demo</div>
+            </button>
+            <button class="project-btn" onclick="launch('PixelStreamingDemo')">
+                <div class="project-name">PixelStreamingDemo</div>
+                <div class="project-path">.uproject | Pixel Streaming</div>
+            </button>
+            <button class="project-btn" onclick="launch('UIMaterialLab')">
+                <div class="project-name">UIMaterialLab</div>
+                <div class="project-path">.uproject | Material Lab</div>
+            </button>
+            <button class="project-btn" onclick="launch('MyProject')">
+                <div class="project-name">MyProject</div>
+                <div class="project-path">.uproject | Default Project</div>
+            </button>
+        </div>
+        <div class="footer">UE 5.7 INTERACTIVE EDITOR</div>
+    </div>
+    <script>
+        function launch(name) {
+            // This will be intercepted by Python via QWebChannel
+            if (window.pybridge) {
+                window.pybridge.launchProject(name);
+            } else {
+                console.log("Launch:", name);
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimap Glass Shader</title>
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: transparent;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        #container {
+            width: 95%;
+            height: 90%;
+            border-radius: 24px;
+            overflow: hidden;
+            position: relative;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .label {
+            position: absolute;
+            top: 12px;
+            left: 16px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            pointer-events: none;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .status-dot {
+            position: absolute;
+            top: 14px;
+            right: 16px;
+            width: 6px;
+            height: 6px;
+            background: #4ade80;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #4ade80;
+        }
+    </style>
+<link rel="stylesheet" href="theme.css"></head>
+
+<body>
+    <div id="container">
+        <div class="label">4D Stream • SDF Engine</div>
+        <div class="status-dot"></div>
+        <canvas id="gl-canvas"></canvas>
+    </div>
+
+    <script id="vertex-shader" type="x-shader/x-vertex">
+        attribute vec2 position;
+        void main() {
+            gl_Position = vec4(position, 0.0, 1.0);
+        }
+    </script>
+    <script id="fragment-shader" type="x-shader/x-fragment">
+        precision highp float;
+        uniform vec2 u_resolution;
+        uniform float u_time;
+
+        #define MAX_STEPS 64
+        #define MAX_DIST 20.0
+        #define SURF_DIST 0.005
+
+        mat2 Rot(float a) {
+            float s = sin(a);
+            float c = cos(a);
+            return mat2(c, -s, s, c);
+        }
+
+        float smin(float a, float b, float k) {
+            float h = clamp(0.5 + 0.5 * (b - a) / k, 0.0, 1.0);
+            return mix(b, a, h) - k * h * (1.0 - h);
+        }
+
+        float hash(vec3 p) {
+            p = fract(p * vec3(123.34, 456.21, 789.18));
+            p += dot(p, p.yzx + 19.19);
+            return fract((p.x + p.y) * p.z);
+        }
+
+        float noise(vec3 p) {
+            vec3 i = floor(p);
+            vec3 f = fract(p);
+            f = f * f * (3.0 - 2.0 * f);
+            return mix(mix(mix(hash(i + vec3(0, 0, 0)), hash(i + vec3(1, 0, 0)), f.x),
+                           mix(hash(i + vec3(0, 1, 0)), hash(i + vec3(1, 1, 0)), f.x), f.y),
+                       mix(mix(hash(i + vec3(0, 0, 1)), hash(i + vec3(1, 0, 1)), f.x),
+                           mix(hash(i + vec3(0, 1, 1)), hash(i + vec3(1, 1, 1)), f.x), f.y), f.z);
+        }
+
+        float GetDist(vec3 p) {
+            float t = u_time * 0.3;
+            
+            p.xz *= Rot(t * 0.2);
+            p.xy *= Rot(t * 0.1);
+
+            // Wavy distortion
+            float wave = sin(p.x * 1.5 + t) * 0.5 + cos(p.z * 1.2 - t) * 0.5;
+            vec3 pD = p + noise(p * 0.5 + t) * 1.2;
+            
+            float d1 = length(pD) - 1.8;
+            float d2 = length(pD.xz) - 0.4 + noise(p * 3.0 + t) * 0.5;
+            
+            // Streaky gree texture
+            float streaks = pow(noise(p * vec3(12.0, 0.4, 0.4) + t), 3.0) * 0.2;
+            
+            float d = smin(d1, d2, 0.8);
+            d -= streaks;
+            d -= wave * 0.1;
+
+            return d * 0.7;
+        }
+
+        float RayMarch(vec3 ro, vec3 rd) {
+            float dO = 0.0;
+            for(int i = 0; i < MAX_STEPS; i++) {
+                vec3 p = ro + rd * dO;
+                float dS = GetDist(p);
+                dO += dS;
+                if(dO > MAX_DIST || abs(dS) < SURF_DIST) break;
+            }
+            return dO;
+        }
+
+        vec3 GetNormal(vec3 p) {
+            float d = GetDist(p);
+            vec2 e = vec2(0.01, 0);
+            vec3 n = d - vec3(
+                GetDist(p - e.xyy),
+                GetDist(p - e.yxy),
+                GetDist(p - e.yyx)
+            );
+            return normalize(n);
+        }
+
+        void main() {
+            vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / u_resolution.y;
+            vec3 ro = vec3(0, 0, -6);
+            vec3 rd = normalize(vec3(uv, 1.2));
+
+            float d = RayMarch(ro, rd);
+            vec3 col = vec3(0.0);
+
+            // Background Deep space
+            float bgN = noise(vec3(uv * 3.0, u_time * 0.02));
+            col = mix(vec3(0.005, 0.01, 0.08), vec3(0.0, 0.04, 0.03), bgN);
+
+            if(d < MAX_DIST) {
+                vec3 p = ro + rd * d;
+                vec3 n = GetNormal(p);
+                float diff = dot(n, normalize(vec3(1, 2, 3))) * 0.5 + 0.5;
+                
+                float colorMix = noise(p * 0.4 + u_time * 0.2);
+                
+                vec3 blue = vec3(0.1, 0.4, 1.0);
+                vec3 green = vec3(0.2, 1.0, 0.5);
+                vec3 yellow = vec3(1.0, 1.0, 0.2);
+                
+                vec3 mCol = mix(blue, green, colorMix);
+                mCol = mix(mCol, yellow, pow(diff, 4.0));
+                
+                col = mix(col, mCol, 0.9);
+                col += yellow * pow(noise(p * 5.0 - u_time), 8.0) * 0.4; // Highlights
+            }
+
+            // --- DATA DOTS OVERLAY ---
+            // Procedural grid dots
+            vec2 gUv = uv * 15.0;
+            vec2 id = floor(gUv);
+            vec2 fv = fract(gUv) - 0.5;
+            
+            float nDots = hash(vec3(id, floor(u_time * 0.5)));
+            if(nDots > 0.8) {
+                float dotD = length(fv);
+                float dotMask = smoothstep(0.1, 0.05, dotD);
+                col += vec3(0.4, 1.0, 0.8) * dotMask * (sin(u_time * 2.0 + nDots * 10.0) * 0.5 + 0.5);
+            }
+
+            // Scanning line
+            float scan = sin(uv.y * 20.0 - u_time * 2.0) * 0.5 + 0.5;
+            col += vec3(0.1, 0.3, 0.2) * pow(scan, 20.0) * 0.2;
+
+            // Vignette
+            col *= 1.0 - length(uv) * 0.5;
+            
+            // Gamma
+            col = pow(col, vec3(0.4545));
+            gl_FragColor = vec4(col, 1.0);
+        }
+    </script>
+    <script>
+        const canvas = document.getElementById('gl-canvas');
+        const gl = canvas.getContext('webgl');
+
+        function createShader(gl, type, source) {
+            const shader = gl.createShader(type);
+            gl.shaderSource(shader, source);
+            gl.compileShader(shader);
+            return shader;
+        }
+
+        const vsSource = document.getElementById('vertex-shader').text;
+        const fsSource = document.getElementById('fragment-shader').text;
+        const program = gl.createProgram();
+        gl.attachShader(program, createShader(gl, gl.VERTEX_SHADER, vsSource));
+        gl.attachShader(program, createShader(gl, gl.FRAGMENT_SHADER, fsSource));
+        gl.linkProgram(program);
+
+        const positionBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]), gl.STATIC_DRAW);
+
+        const positionLoc = gl.getAttribLocation(program, 'position');
+        const resLoc = gl.getUniformLocation(program, 'u_resolution');
+        const timeLoc = gl.getUniformLocation(program, 'u_time');
+
+        function resize() {
+            canvas.width = canvas.clientWidth;
+            canvas.height = canvas.clientHeight;
+            gl.viewport(0, 0, canvas.width, canvas.height);
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        function render(time) {
+            gl.clearColor(0, 0, 0, 0);
+            gl.clear(gl.COLOR_BUFFER_BIT);
+            gl.useProgram(program);
+            gl.enableVertexAttribArray(positionLoc);
+            gl.vertexAttribPointer(positionLoc, 2, gl.FLOAT, false, 0, 0);
+            gl.uniform2f(resLoc, canvas.width, canvas.height);
+            gl.uniform1f(timeLoc, time * 0.001);
+            gl.drawArrays(gl.TRIANGLES, 0, 6);
+            requestAnimationFrame(render);
+        }
+        requestAnimationFrame(render);
+    </script>
+</body>
+
+</html>

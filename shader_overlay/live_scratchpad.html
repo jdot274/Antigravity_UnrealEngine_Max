@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Live Scratchpad</title>
+    <link rel="stylesheet" href="theme.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .editor-area {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.3);
+            border: none;
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono';
+            padding: 10px;
+            font-size: 11px;
+            resize: none;
+            outline: none;
+        }
+
+        .output-area {
+            height: 100px;
+            background: #263238;
+            border-top: 1px solid var(--border);
+            padding: 10px;
+            color: var(--success);
+            font-family: 'JetBrains Mono';
+            font-size: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header" style="padding:5px;">LIVE CODE RUNNER (NODE.JS)</div>
+    <textarea class="editor-area" spellcheck="false">// Quokka-style Live Execution
+const scene_data = {
+  objects: 14205,
+  memory: "4.2GB",
+  fps: 120
+};
+
+// Calculate density
+console.log("Density: ", scene_data.objects / 4096);</textarea>
+    <div class="output-area" id="output">
+        > Density: 3.468017578125<br>
+        > [Done] exited with code=0 in 0.045 seconds
+    </div>
+</body>
+
+</html>

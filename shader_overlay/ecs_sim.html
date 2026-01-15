@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECS Entity Stream: 100k Bullets</title>
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: transparent;
+        }
+
+        #container {
+            width: 95%;
+            height: 90%;
+            border-radius: 24px;
+            overflow: hidden;
+            position: relative;
+            background: rgba(10, 10, 15, 0.6);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(74, 222, 128, 0.2);
+            box-shadow: 0 0 30px rgba(74, 222, 128, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .stats {
+            position: absolute;
+            bottom: 15px;
+            right: 20px;
+            color: #4ade80;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9px;
+            text-align: right;
+            pointer-events: none;
+            text-shadow: 0 0 5px rgba(74, 222, 128, 0.5);
+        }
+
+        .label {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            color: #4ade80;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+    </style>
+<link rel="stylesheet" href="theme.css"></head>
+
+<body>
+    <div id="container">
+        <div class="label">ECS Sparse-Set Stream</div>
+        <div class="stats">
+            ENTITIES: 102,400<br>
+            BUFFER: COMPONENT_TRANSFORM<br>
+            MODE: BATCH_RENDER_SIMD
+        </div>
+        <canvas id="ecsCanvas"></canvas>
+    </div>
+
+    <script id="vertex-shader" type="x-shader/x-vertex">
+        attribute vec2 a_position;
+        attribute float a_id;
+        uniform float u_time;
+        uniform vec2 u_resolution;
+        varying vec3 v_color;
+
+        float hash(float n) { return fract(sin(n) * 43758.5453123); }
+
+        void main() {
+            float t = u_time * 0.5;
+            vec2 pos = a_position;
+            
+            // Procedural movement simulating 100k entity batch traversal
+            float offset = hash(a_id) * 6.28;
+            pos.x += cos(t + offset) * 0.5 * sin(a_id * 0.001);
+            pos.y += sin(t * 1.2 + offset) * 0.5 * cos(a_id * 0.001);
+            
+            // Flow field influence
+            pos.x += sin(pos.y * 3.0 + t) * 0.1;
+            pos.y += cos(pos.x * 3.0 + t) * 0.1;
+
+            gl_Position = vec4(pos, 0.0, 1.0);
+            gl_PointSize = 1.2;
+
+            // Color based on entity ID and movement
+            v_color = mix(vec3(0.1, 0.8, 0.4), vec3(0.2, 0.6, 1.0), sin(a_id * 0.0001 + t) * 0.5 + 0.5);
+        }
+    </script>
+    <script id="fragment-shader" type="x-shader/x-fragment">
+        precision highp float;
+        varying vec3 v_color;
+        void main() {
+            float d = length(gl_PointCoord - 0.5);
+            if (d > 0.5) discard;
+            gl_FragColor = vec4(v_color, 1.0 - d * 2.0);
+        }
+    </script>
+
+    <script>
+        const canvas = document.getElementById('ecsCanvas');
+        const gl = canvas.getContext('webgl');
+
+        function createShader(gl, type, source) {
+            const shader = gl.createShader(type);
+            gl.shaderSource(shader, source);
+            gl.compileShader(shader);
+            return shader;
+        }
+
+        const vsSource = document.getElementById('vertex-shader').text;
+        const fsSource = document.getElementById('fragment-shader').text;
+        const program = gl.createProgram();
+        gl.attachShader(program, createShader(gl, gl.VERTEX_SHADER, vsSource));
+        gl.attachShader(program, createShader(gl, gl.FRAGMENT_SHADER, fsSource));
+        gl.linkProgram(program);
+
+        // Create 100k entities
+        const count = 102400;
+        const positions = new Float32Array(count * 2);
+        const ids = new Float32Array(count);
+
+        for (let i = 0; i < count; i++) {
+            positions[i * 2] = (Math.random() * 2 - 1);
+            positions[i * 2 + 1] = (Math.random() * 2 - 1);
+            ids[i] = i;
+        }
+
+        const posBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
+
+        const idBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, idBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, ids, gl.STATIC_DRAW);
+
+        const posLoc = gl.getAttribLocation(program, 'a_position');
+        const idLoc = gl.getAttribLocation(program, 'a_id');
+        const timeLoc = gl.getUniformLocation(program, 'u_time');
+
+        function resize() {
+            canvas.width = canvas.clientWidth;
+            canvas.height = canvas.clientHeight;
+            gl.viewport(0, 0, canvas.width, canvas.height);
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        function render(time) {
+            gl.clearColor(0, 0, 0, 0);
+            gl.clear(gl.COLOR_BUFFER_BIT);
+            gl.useProgram(program);
+
+            gl.enableVertexAttribArray(posLoc);
+            gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer);
+            gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
+
+            gl.enableVertexAttribArray(idLoc);
+            gl.bindBuffer(gl.ARRAY_BUFFER, idBuffer);
+            gl.vertexAttribPointer(idLoc, 1, gl.FLOAT, false, 0, 0);
+
+            gl.uniform1f(timeLoc, time * 0.001);
+
+            gl.drawArrays(gl.POINTS, 0, count);
+            requestAnimationFrame(render);
+        }
+        requestAnimationFrame(render);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,32 @@
+:root {
+    /* Base Colors from Material Theme */
+    --editor-bg: #263238;
+    --panel-bg: #37474F;
+    --text-primary: #EEFFFF;
+    --text-secondary: #546E7A;
+    --accent: #80CBC4;
+    --success: #C3E88D;
+    --warning: #FFCB6B;
+    --danger: #FF5370;
+    --border: rgba(0,0,0,0.2);
+}
+
+/* Glassy Antigravity Overrides */
+body {
+    background: transparent !important;
+}
+
+#container, .panel, .window {
+    background: rgba(38, 50, 56, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(128, 203, 196, 0.1);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+.header, .panel-header {
+    background: rgba(0,0,0,0.2);
+    border-bottom: 1px solid var(--border);
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+}
