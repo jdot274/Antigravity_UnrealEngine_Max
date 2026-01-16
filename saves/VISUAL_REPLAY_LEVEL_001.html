@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Antigravity Visual Replay: Level 001</title>
+    <style>
+        :root {
+            --bg-dark: #121212;
+            --panel-bg: #1e1e1e;
+            --text-main: #e0e0e0;
+            --accent-blue: #00f2ff;
+            --tool-accent: #8b5cf6;
+            --green: #4ade80;
+            --red: #f87171;
+        }
+
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .ide-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            border: 1px solid #333;
+        }
+
+        header {
+            padding: 10px 20px;
+            background: #181818;
+            border-bottom: 1px solid #2a2a2a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .title {
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-area {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .message {
+            margin-bottom: 30px;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        .tool-call {
+            background: rgba(139, 92, 246, 0.1);
+            border-radius: 8px;
+            padding: 12px;
+            margin: 15px 0;
+            border-left: 4px solid var(--tool-accent);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13px;
+        }
+
+        .hammer-icon {
+            color: var(--tool-accent);
+            font-size: 18px;
+        }
+
+        .file-edit {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 6px;
+            padding: 10px 15px;
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: ui-monospace, monospace;
+            font-size: 12px;
+        }
+
+        .diff-stat {
+            color: var(--green);
+        }
+
+        .end-terminal {
+            font-size: 24px;
+            margin: 40px 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .footer {
+            height: 25px;
+            background: #1a1a1a;
+            border-top: 1px solid #2a2a2a;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            font-size: 11px;
+            color: #888;
+        }
+
+        /* Glassmorphism for the Monitor Preview */
+        .monitor-preview {
+            position: fixed;
+            top: 60px;
+            right: 40px;
+            width: 250px;
+            background: rgba(20, 20, 30, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 242, 255, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .node {
+            height: 30px;
+            margin-bottom: 8px;
+            border-left: 4px solid var(--green);
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            padding-left: 10px;
+            font-size: 10px;
+            font-weight: 800;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="ide-container">
+        <header>
+            <div class="title">
+                <span>Visualizing Universe Status</span>
+            </div>
+            <div class="controls">
+                <span>➕ 🕒 💬 ✖️</span>
+            </div>
+        </header>
+
+        <div class="chat-area">
+            <div class="message">
+                <p>chat history for the user.</p>
+            </div>
+
+            <div class="tool-call">
+                <span class="hammer-icon">🛠️</span>
+                <span>MCP Tool: <strong>filesystem / create_directory</strong></span>
+            </div>
+
+            <div class="file-edit">
+                <span>📄 chat_archiver.py</span>
+                <span class="diff-stat">+24 -0</span>
+            </div>
+
+            <div class="file-edit">
+                <span>📄 SESSION_SAVE_001.md</span>
+                <span class="diff-stat">+1 -0</span>
+            </div>
+
+            <div class="tool-call">
+                <span class="hammer-icon">🛠️</span>
+                <span>MCP Tool: <strong>memory / add_observations</strong></span>
+            </div>
+
+            <div class="end-terminal">
+                <span>🛑 /END: SESSION SERIALIZED</span>
+            </div>
+
+            <div class="message">
+                <p>The chat and the entire system state are now fully archived. This is your "Retrievable Level Save."
+                </p>
+                <ul>
+                    <li><strong>Chat Archive</strong>:
+                        <code>/Users/joeywalter/antigravity-nexus/saves/chat_logs/CHAT_LEVEL_001_ARCHIVE.md</code></li>
+                    <li><strong>System Snapshot</strong>:
+                        <code>/Users/joeywalter/antigravity-nexus/saves/SESSION_SAVE_001.md</code></li>
+                    <li><strong>Universe State</strong>: Locked at
+                        <code>/Users/joeywalter/antigravity-nexus/shader_overlay/universe_state.json</code></li>
+                </ul>
+                <p>Looking at the Universe Monitor on your screen: The nodes are <strong>ACCEPTED</strong> (Green). Our
+                    rules are <strong>ACTIVE</strong>.</p>
+                <p><strong>Level 001 is complete.</strong> STANDING BY FOR RELOAD.</p>
+            </div>
+        </div>
+
+        <div class="monitor-preview">
+            <div
+                style="font-size: 9px; color: var(--accent-blue); letter-spacing: 2px; margin-bottom: 10px; font-weight: 900;">
+                NEXUS UNIVERSE</div>
+            <div class="node">UE 5.7 C++ RAG</div>
+            <div class="node">CONTEXT 7 PROTOCOL</div>
+            <div class="node" style="border-left-color: var(--accent-blue);">MISSION POD BUILDER</div>
+            <div class="node" style="border-left-color: var(--red);">LEGACY HOT-RELOAD</div>
+        </div>
+
+        <div class="footer">
+            <span>Ln 1, Col 1</span> &nbsp;&nbsp; <span>UTF-8</span> &nbsp;&nbsp; <span>Antigravity - Settings</span>
+        </div>
+    </div>
+</body>
+
+</html>

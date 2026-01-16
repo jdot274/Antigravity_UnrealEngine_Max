@@ -51,9 +51,27 @@ class CommandBridge(QObject):
             subprocess.Popen(["code", "."], cwd=os.getcwd())
         
         elif action == "launch_unreal":
+            mode = data.get("mode", "EDITOR")
+            level = data.get("level", "")
+            
+            # Default paths (these should ideally be configurable)
             editor_path = "/Users/Shared/Epic Games/UE_5.7/Engine/Binaries/Mac/UnrealEditor.app/Contents/MacOS/UnrealEditor"
-            project_path = "/Users/joeywalter/Documents/Unreal Projects/MyProject/MyProject.uproject"
-            subprocess.Popen([editor_path, project_path, "-skipcompile"])
+            project_path = data.get("project", "/Users/joeywalter/Documents/Unreal Projects/MyProject/MyProject.uproject")
+            
+            cmd = [editor_path, project_path]
+            
+            if level:
+                cmd.append(level)
+
+            if mode == "GAME":
+                cmd.append("-game")
+            elif mode == "COMMANDLET":
+                cmd.append("-run=CommandletName") # Dynamic commandlet would be better
+            
+            cmd.append("-skipcompile")
+            
+            logger.info(f"Launching Unreal with CMD: {' '.join(cmd)}")
+            subprocess.Popen(cmd)
         
         elif action == "build_all":
             # Launch the real packaging script
@@ -70,6 +88,31 @@ class CommandBridge(QObject):
         elif action == "open_browser":
             url = data.get("url", "https://github.com")
             subprocess.Popen(["open", url])
+
+        elif action == "open_monitor":
+            monitor_path = "/Users/joeywalter/antigravity-monitor/monitor_app.py"
+            if os.path.exists(monitor_path):
+                subprocess.Popen([sys.executable, monitor_path])
+            else:
+                logger.error(f"Monitor app not found at {monitor_path}")
+                self.relay_cmd.emit("editor", json.dumps({"action": "show_status", "msg": "MONITOR APP NOT FOUND"}))
+
+        elif action == "unreal_inject":
+            code = data.get("code")
+            if code:
+                self.send_to_unreal(code)
+
+    def send_to_unreal(self, code):
+        """Sends python code to the 3003 injection port in Unreal"""
+        import socket
+        try:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                s.connect(('localhost', 3003))
+                s.sendall(json.dumps({"code": code}).encode('utf-8'))
+                logger.info("⚡ Code injected into Unreal socket.")
+        except Exception as e:
+            logger.error(f"❌ Failed to inject into Unreal: {e}")
+            self.relay_cmd.emit("editor", json.dumps({"action": "show_status", "msg": "UNREAL BRIDGE OFFLINE"}))
 
 class AntigravityEditor(QMainWindow):
     def __init__(self, bridge):

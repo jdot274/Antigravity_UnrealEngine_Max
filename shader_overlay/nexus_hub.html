@@ -274,63 +274,77 @@
         #chat-input:focus {
             border-color: var(--accent);
         }
+
+        /* VIRTUALLY STREAMED MONITOR BUTTON */
+        #monitor-launcher {
+            position: absolute;
+            top: 25px;
+            right: 180px;
+            width: 45px;
+            height: 45px;
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid #00ffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1001;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(10px);
+        }
+
+        #monitor-launcher:hover {
+            background: #00ffff;
+            box-shadow: 0 0 35px #00ffff;
+            transform: scale(1.1) rotate(90deg);
+        }
+
+        #monitor-launcher i {
+            color: white;
+            font-size: 18px;
+            filter: drop-shadow(0 0 5px white);
+        }
+
+        #monitor-label-floating {
+            position: absolute;
+            top: 75px;
+            right: 165px;
+            font-size: 8px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            color: #00ffff;
+            text-transform: uppercase;
+            pointer-events: none;
+            opacity: 0.8;
+        }
     </style>
-    <link rel="stylesheet" href="theme.css">
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body>
-    <!-- Persistent Shader Background -->
     <iframe id="bg-iframe" src="index.html"></iframe>
 
     <div class="layout">
-        <nav id="sidebar">
-            <a href="#" class="nav-item active" data-src="editor_ui.html">
+        <nav>
+            <div class="nav-item active" data-src="editor_ui.html">
                 <i class="fas fa-cube"></i>
-                <span class="nav-label">Main Editor</span>
-            </a>
-            <a href="#" class="nav-item" data-src="asset_explorer.html">
+                <div class="nav-label">Viewport</div>
+            </div>
+            <div class="nav-item" data-src="asset_explorer.html">
                 <i class="fas fa-folder-open"></i>
-                <span class="nav-label">Asset Registry</span>
-            </a>
-            <a href="#" class="nav-item" data-src="sim_vs_stream.html">
-                <i class="fas fa-wave-square"></i>
-                <span class="nav-label">Sim vs Stream</span>
-            </a>
-            <a href="#" class="nav-item" data-src="build_monitor.html">
-                <i class="fas fa-microchip"></i>
-                <span class="nav-label">Build Monitor</span>
-            </a>
-            <a href="#" class="nav-item" data-src="spline.html">
-                <i class="fas fa-bezier-curve"></i>
-                <span class="nav-label">Spline View</span>
-            </a>
-            <a href="#" class="nav-item" data-src="level_stream.html">
-                <i class="fas fa-layer-group"></i>
-                <span class="nav-label">Level Stream</span>
-            </a>
-            <a href="#" class="nav-item" data-src="native_stack_viz.html">
-                <i class="fas fa-server"></i>
-                <span class="nav-label">System Viz</span>
-            </a>
-            <div style="margin-top: auto; width: 100%; border-top: 1px solid rgba(255,255,255,0.05); padding: 10px 0;">
-                <a href="#" class="nav-item" data-src="git_timemachine.html">
-                    <i class="fas fa-history"></i>
-                    <span class="nav-label">Time Machine</span>
-                </a>
+                <div class="nav-label">Assets</div>
+            </div>
+            <div class="nav-item" data-src="engine_controller.html">
+                <i class="fas fa-sliders-h"></i>
+                <div class="nav-label">Controller</div>
+            </div>
+            <div class="nav-item" style="margin-top: auto;">
+                <i class="fas fa-cog"></i>
+                <div class="nav-label">Settings</div>
             </div>
         </nav>
-
-        <header>
-            <div class="engine-status">
-                <div class="pill">REAL-TIME METAL 3 ENABLED</div>
-                <div class="version">ANTIGRAVITY-UNREALENGINE-MAX V2.0.0</div>
-            </div>
-            <div id="authoritative-info" style="font-size: 10px; color: rgba(255,255,255,0.3); font-weight: bold;">
-                UE 5.7 TARGET • glTF COMPLIANT
-            </div>
-        </header>
 
         <main>
             <div id="view-container">
@@ -339,29 +353,65 @@
         </main>
     </div>
 
-    <!-- AI CHAT PANEL -->
-    <div id="chat-panel">
-        <div class="chat-header">
-            <div style="font-size: 11px; font-weight: 900; letter-spacing: 1px;">GEMINI NLP INTERFACE</div>
-            <i class="fas fa-times" id="close-chat" style="cursor: pointer; opacity: 0.5;"></i>
-        </div>
-        <div id="chat-messages">
-            <div class="msg ai">Welcome, Engineer. The Nexus Bridge is listening. How can I assist with the project?
-            </div>
-        </div>
-        <div class="chat-input-area">
-            <input type="text" id="chat-input" placeholder="Natural language command...">
-            <button id="send-btn"
-                style="background: var(--accent); border: none; border-radius: 8px; width: 40px; color: white;"><i
-                    class="fas fa-paper-plane"></i></button>
-        </div>
+    <!-- VIRTUALLY STREAMED MONITOR GATE -->
+    <div id="monitor-launcher" title="Antigravity Portal: Unreal-Native Mode">
+        <i class="fas fa-crosshairs"></i>
     </div>
+    <div id="monitor-label-floating">Monitor Gate</div>
 
     <div id="ai-chat-toggle">
         <i class="fas fa-comment-dots" style="color: white; font-size: 24px;"></i>
     </div>
 
+    <div id="chat-panel">
+        <div class="chat-header">
+            <span style="font-weight: 900; font-size: 11px; letter-spacing: 1.5px;">ANTIGRAVITY NEXUS AI</span>
+            <i class="fas fa-times" id="close-chat" style="cursor: pointer; opacity: 0.5;"></i>
+        </div>
+        <div id="chat-messages"></div>
+        <div class="chat-input-area">
+            <input type="text" id="chat-input" placeholder="Type a command (e.g. 'spawn grid')">
+            <button id="send-btn"
+                style="background: var(--accent); border: none; border-radius: 8px; padding: 0 15px; color: white;"><i
+                    class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
     <script>
+        var bridge = null;
+        if (typeof qt !== 'undefined') {
+            new QWebChannel(qt.webChannelTransport, function (channel) {
+                bridge = channel.objects.bridge;
+                console.log("Nexus Hub Bridge Linked");
+            });
+        } else {
+            console.warn("Nexus Hub: Running in browser mode. Bridge actions disabled.");
+            document.body.insertAdjacentHTML('afterbegin', `
+                <div style="position:fixed; top:0; left:0; width:100%; background:#f97316; color:white; font-size:10px; text-align:center; padding:2px; z-index:9999; font-weight:900;">
+                    BROWSER PREVIEW MODE • COMMAND BRIDGE OFFLINE • RUN VIA PYTHON FOR FULL POWER
+                </div>
+            `);
+        }
+
+        function uiCommand(target, action, data = {}) {
+            if (bridge) {
+                const cmd = JSON.stringify({ action: action, ...data });
+                bridge.call(target, cmd);
+            } else {
+                console.error("Bridge not ready");
+            }
+        }
+
+        document.getElementById('monitor-launcher').onclick = () => {
+            // Signal to spawn the gate in Unreal (Implementation Plan Step 1)
+            uiCommand('editor', 'spawn_monitor');
+            // Also launch the monitor app (System Action)
+            uiCommand('system', 'open_monitor');
+            // Log for the user
+            addMessage("🛡️ Manifesting Portal Gate and launching Audit Monitor...", 'ai');
+        };
+
         const navItems = document.querySelectorAll('.nav-item');
         const viewIframe = document.getElementById('view-iframe');
 
@@ -388,13 +438,24 @@
 
             try {
                 const response = await fetch('http://localhost:3002/chat', {
+
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: text, context: { source: 'nexus_hub' } })
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+
+                    ,
+                    body: JSON.stringify({
+                        message: text, context: {
+                            source: 'nexus_hub'
+                        }
+                    })
                 });
                 const data = await response.json();
                 addMessage(data.response, 'ai');
-            } catch (e) {
+            }
+
+            catch (e) {
                 addMessage("❌ Connection failed. Ensure bridge/server.js is running on port 3002.", 'ai');
             }
         }
@@ -408,13 +469,19 @@
         }
 
         sendBtn.onclick = sendMessage;
-        chatInput.onkeypress = (e) => { if (e.key === 'Enter') sendMessage(); };
+
+        chatInput.onkeypress = (e) => {
+            if (e.key === 'Enter') sendMessage();
+        }
+
+            ;
 
         navItems.forEach(item => {
             item.addEventListener('click', (e) => {
                 e.preventDefault();
 
                 const src = item.getAttribute('data-src');
+
                 if (src) {
                     // Update UI
                     navItems.forEach(i => i.classList.remove('active'));
@@ -422,13 +489,19 @@
 
                     // Transition Animation
                     viewIframe.style.opacity = "0";
+
                     setTimeout(() => {
                         viewIframe.src = src;
+
                         viewIframe.onload = () => {
                             viewIframe.style.opacity = "1";
                             viewIframe.style.transition = "opacity 0.3s ease";
-                        };
-                    }, 100);
+                        }
+
+                            ;
+                    }
+
+                        , 100);
                 }
             });
         });

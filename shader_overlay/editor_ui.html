@@ -231,6 +231,10 @@
             <button class="tool-btn active" onclick="console.log('Select Mode')">SELECT</button>
             <button class="tool-btn" onclick="console.log('Build Task Started')">BUILD</button>
             <button class="tool-btn" onclick="console.log('Cooking Content...')">COOK</button>
+            <button class="tool-btn" onclick="uiCommand('system', 'open_monitor')"
+                style="background: rgba(0, 255, 255, 0.2); border-color: #00ffff; color: #00ffff; margin-left: 20px;">
+                MONITOR
+            </button>
             <button class="tool-btn"
                 style="background: #238636; border-color: #2ea043; margin-left: auto; color: white;">PROJECT
                 PLAY</button>
@@ -299,10 +303,28 @@
     <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
     <script>
         var bridge = null;
-        new QWebChannel(qt.webChannelTransport, function (channel) {
-            bridge = channel.objects.bridge;
-            console.log("Simulator Bridge Linked");
-        });
+        if (typeof qt !== 'undefined') {
+            new QWebChannel(qt.webChannelTransport, function (channel) {
+                bridge = channel.objects.bridge;
+                console.log("Simulator Bridge Linked");
+            });
+        } else {
+            console.warn("Simulator: Running in browser mode. External commands disabled.");
+            document.body.insertAdjacentHTML('afterbegin', `
+                <div style="position:fixed; top:0; left:0; width:100%; background:#f97316; color:white; font-size:10px; text-align:center; padding:2px; z-index:9999; font-weight:900;">
+                    BROWSER PREVIEW MODE • RUN main.py FOR LIVE INJECTION
+                </div>
+            `);
+        }
+
+        function uiCommand(target, action, data = {}) {
+            if (bridge) {
+                const cmd = JSON.stringify({ action: action, ...data });
+                bridge.call(target, cmd);
+            } else {
+                console.error("Bridge not ready in simulator");
+            }
+        }
 
         // HANDLE REMOTE COMMANDS FROM CONTROLLER
         function handleEngineCommand(cmd) {
@@ -362,6 +384,26 @@
                         setTimeout(() => ph.style.color = '', 2000);
                     }
                 });
+            }
+
+            if (action === 'spawn_monitor') {
+                statusBar.innerHTML = "🛡️ MANIFESTING MONITOR PORTAL...";
+                statusBar.style.background = '#00ffff';
+
+                // Spawn a 3D Gate in the simulator
+                const gateGeo = new THREE.TorusGeometry(2, 0.05, 16, 100);
+                const gate = addActor("MonitorGate_Alpha", gateGeo, 0x00ffff, [0, 2, 10], [0, 0, 0]);
+                gate.material.transparent = true;
+                gate.material.opacity = 0.8;
+
+                // Add a glowing core
+                const coreGeo = new THREE.SphereGeometry(0.5, 32, 32);
+                const core = addActor("PortalCore", coreGeo, 0xffffff, [0, 2, 10]);
+                core.material.emissiveIntensity = 2;
+
+                setTimeout(() => {
+                    statusBar.style.background = '#1f6feb';
+                }, 3000);
             }
         }
 

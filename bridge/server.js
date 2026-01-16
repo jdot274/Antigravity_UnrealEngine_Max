@@ -103,6 +103,30 @@ mcpServer.setRequestHandler(ListToolsRequestSchema, async () => {
           required: ["message"],
         },
       },
+      {
+        name: "launch_unreal_mode",
+        description: "Launch Unreal Engine in a specific mode (EDITOR, GAME, COMMANDLET)",
+        inputSchema: {
+          type: "object",
+          properties: {
+            mode: { type: "string", enum: ["EDITOR", "GAME", "COMMANDLET"], default: "EDITOR" },
+            project: { type: "string", description: "Path to .uproject if relative to home" },
+            level: { type: "string", description: "Specific level to load" }
+          },
+          required: ["mode"],
+        },
+      },
+      {
+        name: "unreal_inject",
+        description: "Inject Python code directly into the running Unreal instance",
+        inputSchema: {
+          type: "object",
+          properties: {
+            code: { type: "string", description: "The Python code to execute in Unreal" }
+          },
+          required: ["code"],
+        },
+      },
     ],
   };
 });
@@ -120,6 +144,16 @@ mcpServer.setRequestHandler(CallToolRequestSchema, async (request) => {
     const text = result.response.text();
     broadcast("ai_chat", { text });
     return { content: [{ type: "text", text: text }] };
+  }
+
+  if (name === "launch_unreal_mode") {
+    broadcast("system_action", { action: "launch_unreal", ...args });
+    return { content: [{ type: "text", text: `Triggering Unreal launch in ${args.mode} mode.` }] };
+  }
+
+  if (name === "unreal_inject") {
+    broadcast("system_action", { action: "unreal_inject", ...args });
+    return { content: [{ type: "text", text: `Injected code: ${args.code.substring(0, 50)}...` }] };
   }
 
   throw new Error(`Unknown tool: ${name}`);

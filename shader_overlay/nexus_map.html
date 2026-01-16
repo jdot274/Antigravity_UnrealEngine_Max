@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Nexus Architecture Map</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background: #0c0d14;
+            overflow: hidden;
+            font-family: 'SF Pro Display', -apple-system, sans-serif;
+        }
+
+        #viz {
+            width: 100%;
+            height: 100%;
+        }
+
+        .node circle {
+            stroke: #24283b;
+            stroke-width: 2px;
+        }
+
+        .node text {
+            font-size: 10px;
+            fill: #a9b1d6;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .link {
+            stroke: rgba(122, 162, 247, 0.2);
+            stroke-width: 1px;
+            fill: none;
+        }
+
+        .label-bg {
+            fill: #16161e;
+            opacity: 0.8;
+            rx: 4;
+            ry: 4;
+        }
+
+        #controls {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #7aa2f7;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="controls">NEXUS PROJECT ARCHITECTURE MAP</div>
+    <svg id="viz"></svg>
+
+    <script>
+        const data = {
+            name: "NEXUS_ROOT",
+            color: "#ff9e64",
+            children: [
+                {
+                    name: "UNREAL_CORE",
+                    color: "#7aa2f7",
+                    children: [
+                        { name: "World Partition", color: "#00f2ff" },
+                        { name: "Data Layers", color: "#00f2ff" },
+                        { name: "Level instances", color: "#00f2ff" }
+                    ]
+                },
+                {
+                    name: "AI_MATRIX",
+                    color: "#bb9af7",
+                    children: [
+                        { name: "Context 7 Protocol", color: "#00ff88" },
+                        { name: "UE5.7 RAG Index", color: "#00ff88" },
+                        { name: "Snippet Bridge", color: "#ffee00" }
+                    ]
+                },
+                {
+                    name: "VISUAL_HUD",
+                    color: "#ff007c",
+                    children: [
+                        { name: "Universe Monitor", color: "#00f2ff" },
+                        { name: "Notification Stack", color: "#00f2ff" },
+                        { name: "Master Editor", color: "#8b5cf6" }
+                    ]
+                },
+                {
+                    name: "ACTIVE_TASK",
+                    color: "#f7768e",
+                    children: [
+                        { name: "Tennis Ball Sim", color: "#ffee00" },
+                        { name: "Mission Pods", color: "#888888" }
+                    ]
+                }
+            ]
+        };
+
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+
+        const svg = d3.select("#viz")
+            .attr("viewBox", [-width / 2, -height / 2, width, height]);
+
+        const g = svg.append("g");
+
+        const tree = d3.tree().size([2 * Math.PI, Math.min(width, height) / 2 - 100]);
+
+        const root = d3.hierarchy(data);
+        tree(root);
+
+        const link = g.append("g")
+            .attr("fill", "none")
+            .attr("stroke", "#555")
+            .attr("stroke-opacity", 0.4)
+            .attr("stroke-width", 1.5)
+            .selectAll("path")
+            .data(root.links())
+            .join("path")
+            .attr("d", d3.linkRadial()
+                .angle(d => d.x)
+                .radius(d => d.y));
+
+        const node = g.append("g")
+            .selectAll("g")
+            .data(root.descendants())
+            .join("g")
+            .attr("transform", d => `
+                rotate(${d.x * 180 / Math.PI - 90})
+                translate(${d.y},0)
+            `);
+
+        node.append("circle")
+            .attr("fill", d => d.data.color || "#fff")
+            .attr("r", 4);
+
+        node.append("text")
+            .attr("dy", "0.31em")
+            .attr("x", d => d.x < Math.PI ? 10 : -10)
+            .attr("text-anchor", d => d.x < Math.PI ? "start" : "end")
+            .attr("transform", d => d.x >= Math.PI ? "rotate(180)" : null)
+            .text(d => d.data.name)
+            .clone(true).lower()
+            .attr("stroke", "#0c0d14")
+            .attr("stroke-width", 3);
+
+        // Zoom & Pan
+        svg.call(d3.zoom().on("zoom", (event) => {
+            g.attr("transform", event.transform);
+        }));
+
+    </script>
+</body>
+
+</html>

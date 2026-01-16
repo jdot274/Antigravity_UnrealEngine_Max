@@ -162,10 +162,19 @@
     <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
     <script>
         var bridge = null;
-        new QWebChannel(qt.webChannelTransport, function (channel) {
-            bridge = channel.objects.bridge;
-            console.log("Controller Bridge Linked");
-        });
+        if (typeof qt !== 'undefined') {
+            new QWebChannel(qt.webChannelTransport, function (channel) {
+                bridge = channel.objects.bridge;
+                console.log("Controller Bridge Linked");
+            });
+        } else {
+            console.warn("Controller: Running in browser mode. Bridge actions disabled.");
+            document.body.insertAdjacentHTML('afterbegin', `
+                <div style="position:fixed; top:0; left:0; width:100%; background:#f97316; color:white; font-size:10px; text-align:center; padding:2px; z-index:9999; font-weight:900;">
+                    BROWSER PREVIEW • COMMAND BRIDGE OFFLINE
+                </div>
+            `);
+        }
 
         function uiCommand(target, action, data = {}) {
             if (bridge) {
@@ -237,14 +246,17 @@
                 <div class="drop-row" onclick="uiCommand('system', 'open_vscode')">Open VS Code <span
                         class="drop-shortcut">Cmd+Shift+P</span></div>
                 <div class="drop-sep"></div>
+                <div class="drop-row" onclick="uiCommand('system', 'open_monitor')">Mission Audit & Monitoring</div>
                 <div class="drop-row">Resource Usage</div>
                 <div class="drop-row">Profile GPU</div>
             </div>
         </div>
         <div class="master-menu-item">Build
             <div class="master-dropdown">
-                <div class="drop-row" onclick="uiCommand('system', 'launch_unreal')">Launch Unreal Editor <span
-                        class="drop-shortcut">Cmd+L</span></div>
+                <div class="drop-row" onclick="uiCommand('system', 'launch_unreal', {mode: 'EDITOR'})">Launch Unreal
+                    Editor (Project Mode) <span class="drop-shortcut">Cmd+L</span></div>
+                <div class="drop-row" onclick="uiCommand('system', 'launch_unreal', {mode: 'GAME'})">Launch Unreal App
+                    (Standalone Game) <span class="drop-shortcut">Cmd+Shift+L</span></div>
                 <div class="drop-sep"></div>
                 <div class="drop-row" onclick="uiCommand('system', 'build_all')">Build All Levels</div>
                 <div class="drop-sep"></div>
@@ -291,6 +303,10 @@
 
         <div class="section-header">Integrated Tools</div>
         <div class="action-grid">
+            <button class="big-btn" onclick="uiCommand('system', 'open_monitor')"
+                style="background: rgba(0, 255, 255, 0.1); border-color: #00ffff; grid-column: span 2;">
+                ANTIGRAVITY MONITOR <span>Mission Audit & Cost Transparency</span>
+            </button>
             <button class="big-btn" onclick="uiCommand('system', 'open_vscode')">Visual Studio Code <span>Antigravity
                     Theme</span></button>
             <button class="big-btn" onclick="uiCommand('system', 'open_browser', {url: 'https://chat.openai.com'})">AI

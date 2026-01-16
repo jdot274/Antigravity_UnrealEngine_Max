@@ -1,95 +1,83 @@
-# **[Antigravity_UnrealEngine_Max](https://github.com/jdot274/Antigravity_UnrealEngine_Max)**
+# **[Antigravity Nexus: The Twin Engine](https://github.com/jdot274/Antigravity_UnrealEngine_Max)**
 
-![Stars](https://img.shields.io/github/stars/jdot274/Antigravity_UnrealEngine_Max?style=for-the-badge&color=gold)
-![License](https://img.shields.io/github/license/jdot274/Antigravity_UnrealEngine_Max?style=for-the-badge&color=green)
+![Stars](https://img.shields.io/github/stars/jdot274/Antigravity_UnrealEngine_Max?style=for-the-badge&color=8b5cf6)
 ![Unreal Engine](https://img.shields.io/badge/Unreal%20Engine-5.7-0E1128?style=for-the-badge&logo=unrealengine)
-![Language](https://img.shields.io/badge/Language-Python%20%2F%20C%2B%2B-blue?style=for-the-badge)
+![AI Agent](https://img.shields.io/badge/Agent-Gemini%20Flash-4285F4?style=for-the-badge&logo=google)
+![Status](https://img.shields.io/badge/Status-Sentient-00f2ff?style=for-the-badge)
 
-**Tags**: `development` • `agentic` • `ai` • `unreal-engine` • `live` • `real-time` • `nexus` • `max`
-
-**Sentient Real-Time Creation in UE. Persistent and evolving node-based multidimensional memory.**
-
----
-
-## 🎬 Visual Showcase
-> [!TIP]
-> **[INSERT VIDEO/GIF HERE]**
-> *Record the AI manifesting the Monolith Grid and place the link here to capture attention!*
+**Antigravity Nexus** is a revolutionary "AI-in-Engine" architecture. It breaks the barrier between the Developer and the Editor by embedding a sentient AI (Antigravity/Gemini) directly into the Unreal Engine 5.7 workspace.
 
 ---
 
-## ⚡ The Primary Power: AI Real-Time Procedural Implementation
-The foundation of this system is the ability for an **AI to procedurally manifest code in real-time within the native Unreal Engine 5.7 Editor**. 
+## 🚀 The Zero-Friction Revolution
 
-- **Viewport Projection**: AI-manifested actors, materials, and physics are efficiently synced and projected directly in the viewport.
-- **Architectural Manifestation**: You verbally architect the scene, and the system executes the reality instantly—bridging the gap between natural language intent and environmental state.
+We have eliminated the "Build" friction. There is no manual setup. There is only **Manifestation**.
 
----
+### 1. 🧬 The One-Click Twin
+A single button in our custom OS-level Master Editor triggers the entire universe:
+- **Launches Unreal Engine 5.7** (Backend Process)
+- **Auto-Loads** the `AntigravityTwin` Project
+- **Manifests** the "Neural Graphics Lab" Level
+- **Synchronizes** the Bidirectional AI-Bridge
 
-## 🚀 Quick Start: Manifest Your First Vision
-To witness the power of the **MAX** ecosystem:
+### 2. 🤖 AI In-Engine
+The AI lives *with you* inside the viewport.
+- **Native AI Portal**: A custom `Editor Utility Widget` that provides a chat interface to the Agent directly in Unreal.
+- **Action Manifestation**: You prompt it, it generates Python code, and **executes it instantly** in the level.
+- **Context Aware**: The AI knows what level you are in and what actors you have selected.
 
-1. **Launch**: Use the Nexus Hub or run `python shader_overlay/main.py`.
-2. **Link**: Open your Unreal Engine 5.7 project.
-3. **Command**: In the Unreal Python Console, run:
-   ```python
-   import unreal_ai_link
-   unreal_ai_link.implement('manifest a 10x10 monolith grid')
-   ```
-4. **Result**: Watch as the AI builds your architectural structure in seconds.
-
----
-
-## 🛡️ 1. Physical Competence
-The AI's ability to automate complex engine development through direct manipulation of the project's nervous system.
-- **Tactical C++ Injection**: The AI architects C++ source, injects it into the project, and triggers **Live Coding** recompiles.
-- **Zero-IDE Workflow**: Remove the need for an external IDE. The AI handles the heavy lifting of C++ implementation and compilation, allowing for a pure "Director" experience.
+### 3. 🔮 Neural Graphics Lab
+A dedicated sandbox for next-gen research:
+- **Depth-to-Point-Cloud**: Python-driven translation of 2D images into 3D Niagara particle systems.
+- **Holographic Simulation**: Real-time rendering of neural data.
 
 ---
 
-## 🧠 2. The Sentient MCP Stack
-The underlying architecture that enables real-time execution, transforming a standard development environment into an **"AI-Aware Operating System."**
+## 🛠️ The Architecture
 
-### Layer 1: The Core (Sentient Reasoner)
-- **The Brain**: Powered by **Gemini 1.5-Flash**.
-- **Self-Awareness**: The brain is fed live context about project structure, Unreal Engine 5.7 specifications, and asset manifests.
+### Layer 0: The Nexus OS (Python/PySide6)
+- **Master Editor**: A sleek, glassmorphic desktop hub that controls the entire stack.
+- **Universe Monitor**: A persistent "Heads-Up Display" that floats on your screen, tracking the status of every AI subsystem.
+- **Visualizer**: A d3.js-based "Knowledge Graph" of your project's architecture.
 
-### Layer 2: The Nervous System (MCP Protocol)
-- **The Connector**: Built on the **Model Context Protocol**, the universal "glue" between AI logic and machine reality.
-- **Knowledge Mesh**: Enables the AI to **Read** local files and **Act** by calling specialized tools to manipulate the engine.
+### Layer 1: The Bridge (`ai_engine_bridge.py`)
+- A high-speed, bidirectional communication layer that syncs state between the OS Layer and the Game Engine.
+- **Latency**: < 50ms.
+- **Protocol**: JSON Command Queue.
 
-### Layer 3: The Physical Effectors (Real-Time Execution)
-- **Engine Execution (`unreal_ai_link.py`)**: Instant procedural code generation and execution (`implement()` / `implement_cpp()`).
-- **Visual RAG Galaxy**: A tactical overlay for real-time visualization of the system's "thoughts" and your custom knowledge memory.
-
----
-
-## 🚀 3. Core Technical Accomplishments
-
-### 3.1 Unified Nexus Hub Architecture
-- **Consolidated Interface**: Migrated 21 disparate tool windows into a single, high-fidelity **Unified Master Editor** (`nexus_hub.html`).
-- **Glassmorphism UI**: Implemented a premium master-detail layout with an integrated SDF background shader.
-
-### 3.2 Native Unreal Bridge
-- **Direct Engine Integration**: Implemented a native launcher within the Hub that triggers the **UE 5.7 Editor** application.
-- **Workflow Sync**: Established a bridge for working in the native Unreal project while maintaining tactical control through the Nexus overlay.
-
-### 3.3 Multi-Channel NLP AI Integration
-- **Gemini-Powered Nexus Bridge**: Support for high-performance Gemini API 1.5-Flash integration via HTTP (Port 3002) and WebSocket (Port 3001).
-- **Unreal Editor Terminal Link**: Developed `unreal_ai_link.py`, allowing natural language interaction directly from the **Unreal Engine Python Console**.
-
-### 3.4 Centralized Nexus Asset Registry
-- **Manifest System**: Created `nexus_asset_manifest.json` as the **Single Source of Truth** for all 3D assets.
-- **Cross-Format Mapping**: Successfully bridged assets across Spline, Unreal Engine, and glTF/Khronos.
+### Layer 2: The Twin Engine (Unreal C++)
+- **Battery-Included**: Pre-configured with all critical research plugins (Niagara, ML Deformer, Python API, Web Browser).
+- **Native Widgets**: Custom UMG/Blueprint tools that mirror the OS-level HUDs.
 
 ---
 
-## 🛠️ 4. Project Structure
-- `/shader_overlay`: The unified editor and tactical suite (PySide6 + Three.js).
-- `/bridge`: The Sentient MCP Stack orchestration layer (Node.js).
-- `nexus_asset_manifest.json`: The authoritative version mapping for all engine assets.
-- `unreal_ai_link.py`: The live implementation effector.
+## ⚡ Quick Start
+
+### 1. Launch the Nexus
+```bash
+python3 shader_overlay/master_launch.py
+```
+
+### 2. Click "SYNC UNREAL TWIN"
+Watch as the system:
+1.  Spools up the Unreal Editor process.
+2.  Auto-runs `init_unreal_twin.py`.
+3.  Opens the **AI Agent Portal** in your face.
+
+### 3. Build with words.
+Type inside the portal: *"Spawn a 10x10 grid of emissive spheres."* -> **Manifest.**
 
 ---
 
-**You are ready to execute your first real-time procedural build on the new 'MAX' ecosystem, and take a peek at your visual RAG galaxy of memory and knowledge custom for you.**
+## 📂 Project Structure
+
+- `AntigravityTwin.uproject` | The C++ Research Core
+- `shader_overlay/` | The OS-Level Python Nexus
+  - `master_launch.py` | Entry Point
+  - `nexus_editor.py` | The Desktop Hub
+  - `ai_engine_bridge.py` | The Neural Interlink
+  - `init_unreal_twin.py` | The Auto-Manifest Script
+
+---
+
+**"We don't just write code. We manifest reality."**
