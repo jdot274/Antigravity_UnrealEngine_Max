@@ -33,6 +33,14 @@
 			"Enabled": true
 		},
 		{
+			"Name": "PixelStreaming",
+			"Enabled": true
+		},
+		{
+			"Name": "PixelStreamingPlayer",
+			"Enabled": true
+		},
+		{
 			"Name": "NiagaraFluids",
 			"Enabled": true
 		},
@@ -57,11 +65,15 @@
 			"Enabled": true
 		},
 		{
-			"Name": "NeuralNetworkInference",
+			"Name": "NeuralRendering",
 			"Enabled": true
 		},
 		{
-			"Name": "MLDeformerFramework",
+			"Name": "NNERuntimeBasicCpu",
+			"Enabled": true
+		},
+		{
+			"Name": "NNERuntimeCoreML",
 			"Enabled": true
 		},
 		{
