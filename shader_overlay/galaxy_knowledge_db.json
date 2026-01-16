@@ -1,0 +1,146 @@
+[
+    {
+        "id": "9c716138-6a79-4ca7-bf2b-27742c257067",
+        "category": "Task",
+        "topic": "AAA Mesh Instantiation",
+        "content": "Instantiate 10 new AAA meshes in Blueprints using nexus_world_populator.py and nexus_material_builder.py. Focus on procedural placement and material assignment.",
+        "timestamp": "2026-01-16T10:11:08.260268",
+        "vector": [
+            0.1,
+            0.5,
+            0.9
+        ]
+    },
+    {
+        "id": "5a4da241-8aeb-48c2-a9a8-161faadcda7a",
+        "category": "Idea",
+        "topic": "Futuristic Unreal Engine Systems",
+        "content": "Roadmap for 10 Futuristic Systems: Python automation, SDF utilization, AR/VR integration, advanced Mesh handling, Camera control, Plugin architecture, and Stylized rendering.",
+        "timestamp": "2026-01-16T10:11:08.260290",
+        "vector": [
+            0.2,
+            0.8,
+            0.1
+        ]
+    },
+    {
+        "id": "5d6f4fa2-2274-477d-b24c-cfcae6a8a5fa",
+        "category": "Task",
+        "topic": "4K Pixel Streaming Screen",
+        "content": "Build a 4K pixel stream monitor with a 'Mini Map' filtered aesthetic. Uses SceneCaptureComponent2D in Orthographic mode, customized PostProcess (Chromatic Aberration, Bloom), and live JSON-based visual modulation.",
+        "timestamp": "2026-01-16T10:11:08.260298",
+        "vector": [
+            0.9,
+            0.2,
+            0.3
+        ]
+    },
+    {
+        "id": "2aa836c8-4631-4ccb-9dd8-4c3add927527",
+        "category": "Task",
+        "topic": "Antigravity Unreal Tennis",
+        "content": "Develop an 'Antigravity Tennis' game with procedural assets, neon lighting, and an in-world OLED monitor for score display using Remote Control API.",
+        "timestamp": "2026-01-16T10:11:08.260304",
+        "vector": [
+            0.5,
+            0.5,
+            0.5
+        ]
+    },
+    {
+        "id": "071ebe8e-99b2-453c-b2f5-e6996df5f7f2",
+        "category": "Idea",
+        "topic": "Live Visuals Bridge",
+        "content": "Runtime visual control using a 'universe_state.json' file poller in C++. Allows changing PostProcess settings (Distortion, Bloom) without recompiling or restarting the Shipping build.",
+        "timestamp": "2026-01-16T10:11:08.260310",
+        "vector": [
+            0.8,
+            0.1,
+            0.9
+        ]
+    },
+    {
+        "id": "1937be8b-c893-46a1-b923-e60b2a432fe2",
+        "category": "Architecture",
+        "topic": "Nexus MiniMap Sensor",
+        "content": "C++ Class 'ANexusMiniMapSensor' optimized for Metal 3. Features dynamic Orthographic capture, Render Target management, and JSON serialization for live config.",
+        "timestamp": "2026-01-16T10:11:08.260317",
+        "vector": [
+            0.3,
+            0.4,
+            0.8
+        ]
+    },
+    {
+        "id": "fa6d154e-7c02-4b4b-8c3a-1973817df91a",
+        "category": "Task",
+        "topic": "AAA Mesh Instantiation",
+        "content": "Instantiate 10 new AAA meshes in Blueprints using nexus_world_populator.py and nexus_material_builder.py. Focus on procedural placement and material assignment.",
+        "timestamp": "2026-01-16T13:10:01.061345",
+        "vector": [
+            0.1,
+            0.5,
+            0.9
+        ]
+    },
+    {
+        "id": "2155eaaa-395a-41b3-99bc-fc603ac70be5",
+        "category": "Idea",
+        "topic": "Futuristic Unreal Engine Systems",
+        "content": "Roadmap for 10 Futuristic Systems: Python automation, SDF utilization, AR/VR integration, advanced Mesh handling, Camera control, Plugin architecture, and Stylized rendering.",
+        "timestamp": "2026-01-16T13:10:01.061363",
+        "vector": [
+            0.2,
+            0.8,
+            0.1
+        ]
+    },
+    {
+        "id": "eccb52df-ed9a-44d4-a634-d03cba988734",
+        "category": "Task",
+        "topic": "4K Pixel Streaming Screen",
+        "content": "Build a 4K pixel stream monitor with a 'Mini Map' filtered aesthetic. Uses SceneCaptureComponent2D in Orthographic mode, customized PostProcess (Chromatic Aberration, Bloom), and live JSON-based visual modulation.",
+        "timestamp": "2026-01-16T13:10:01.061370",
+        "vector": [
+            0.9,
+            0.2,
+            0.3
+        ]
+    },
+    {
+        "id": "3b710437-06ab-486f-a3c1-ca05c9467bc9",
+        "category": "Task",
+        "topic": "Antigravity Unreal Tennis",
+        "content": "Develop an 'Antigravity Tennis' game with procedural assets, neon lighting, and an in-world OLED monitor for score display using Remote Control API.",
+        "timestamp": "2026-01-16T13:10:01.061375",
+        "vector": [
+            0.5,
+            0.5,
+            0.5
+        ]
+    },
+    {
+        "id": "0ceca99b-c922-4951-a49b-28073d6097d8",
+        "category": "Idea",
+        "topic": "Live Visuals Bridge",
+        "content": "Runtime visual control using a 'universe_state.json' file poller in C++. Allows changing PostProcess settings (Distortion, Bloom) without recompiling or restarting the Shipping build.",
+        "timestamp": "2026-01-16T13:10:01.061381",
+        "vector": [
+            0.8,
+            0.1,
+            0.9
+        ]
+    },
+    {
+        "id": "f7da0399-a9e5-4616-9b94-08e99ed302ef",
+        "category": "Architecture",
+        "topic": "Nexus MiniMap Sensor",
+        "content": "C++ Class 'ANexusMiniMapSensor' optimized for Metal 3. Features dynamic Orthographic capture, Render Target management, and JSON serialization for live config.",
+        "timestamp": "2026-01-16T13:10:01.061386",
+        "vector": [
+            0.3,
+            0.4,
+            0.8
+        ]
+    }
+]

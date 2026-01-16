@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nexus-unreal-renderer
+  labels:
+    app: nexus-renderer
+spec:
+  replicas: 1 # Scale this based on GPU availability
+  selector:
+    matchLabels:
+      app: nexus-renderer
+  template:
+    metadata:
+      labels:
+        app: nexus-renderer
+    spec:
+      tolerations:
+      - key: "nvidia.com/gpu"
+        operator: "Exists"
+        effect: "NoSchedule"
+      containers:
+      - name: unreal-instance
+        image: gcr.io/antigravity-nexus-v1/nexus-unreal-client:latest
+        resources:
+          limits:
+            nvidia.com/gpu: 1 # Request 1 GPU
+        env:
+        - name: SIGNALLING_SERVER_IP
+          value: "nexus-signal-service"
+        - name: UNREAL_ARGUMENTS
+          value: "-PixelStreamingURL=ws://nexus-signal-service:8888 -RenderOffscreen"

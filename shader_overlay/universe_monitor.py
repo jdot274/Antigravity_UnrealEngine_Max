@@ -157,6 +157,10 @@ class AntigravityUniverseMonitor(QWidget):
         except Exception:
             pass
 
+    def closeEvent(self, event):
+        event.ignore()
+        print("Universe Monitor is eternal.")
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     app.setQuitOnLastWindowClosed(False) # Keep agent alive

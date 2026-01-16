@@ -1,0 +1,105 @@
+{
+    "project_name": "Antigravity Nexus",
+    "version": "2.0.0",
+    "last_updated": "2026-01-16",
+    "configurations": {
+        "environment": "mac_metal",
+        "engine_version": "5.5",
+        "render_pipeline": "deferred",
+        "pixel_streaming": {
+            "url": "ws://127.0.0.1:8888",
+            "webrtc_port": 8888,
+            "streamer_port": 8888
+        }
+    },
+    "paths": {
+        "root": "./",
+        "scripts": "shader_overlay",
+        "assets_root": "Content",
+        "web_bridge": "bridge/SignallingWebServer"
+    },
+    "content_assets": [
+        {
+            "id": "asset_glass",
+            "path": "Nexus/Materials/M_NexusGlass.uasset",
+            "type": "material",
+            "description": "High-fidelity translucent glass"
+        },
+        {
+            "id": "asset_oled",
+            "path": "Nexus/Materials/M_OLED_Futuristic.uasset",
+            "type": "material",
+            "description": "Emissive OLED shader"
+        },
+        {
+            "id": "asset_biometric_cloud",
+            "path": "biometric_cloud.uasset",
+            "type": "unknown",
+            "description": "Legacy biometric data asset"
+        }
+    ],
+    "modules": [
+        {
+            "name": "OLED Monitor",
+            "id": "mod_oled_01",
+            "enabled": true,
+            "script_entry": "nexus_oled_monitor.py",
+            "description": "Futuristic curved display with volumetric bloom"
+        },
+        {
+            "name": "Tennis Minigame",
+            "id": "mod_tennis_02",
+            "enabled": false,
+            "script_entry": "nexus_material_builder.py",
+            "description": "Physics testing playground"
+        },
+        {
+            "name": "AI Bridge",
+            "id": "sys_ai_01",
+            "enabled": true,
+            "script_entry": "ai_engine_bridge.py",
+            "type": "background_service"
+        },
+        {
+            "name": "Nexus Tools (CLI & Explorer)",
+            "id": "sys_tools_01",
+            "enabled": true,
+            "script_entry": "Content/Python/utils/nexus_tools.py",
+            "type": "unreal_python_menu"
+        },
+        {
+            "name": "Note: Legacy External Windows disabled in favor of Native UI",
+            "id": "legacy_note",
+            "enabled": false,
+            "script_entry": "",
+            "type": "note"
+        }
+    ],
+    "launch_sequence": [
+        {
+            "step": 1,
+            "module_id": "sys_ai_01",
+            "wait_time_ms": 1000
+        },
+        {
+            "step": 2,
+            "module_id": "sys_notifier_01",
+            "wait_time_ms": 1000
+        },
+        {
+            "step": 3,
+            "module_id": "sys_monitor_01",
+            "wait_time_ms": 1000
+        },
+        {
+            "step": 4,
+            "module_id": "sys_editor_01",
+            "wait_time_ms": 2000
+        },
+        {
+            "step": 5,
+            "action": "notify",
+            "message": "Mission Pod Implementation Initiated."
+        }
+    ]
+}

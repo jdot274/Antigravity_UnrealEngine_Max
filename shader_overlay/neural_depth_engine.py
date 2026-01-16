@@ -1,44 +1,67 @@
+import sys
 import json
-import math
-import random
+import os
+import numpy as np
+from PIL import Image
 
-def generate_depth_cloud(image_path, resolution=64):
+def generate_hologram_data(image_path, output_path):
     """
-    Simulates depth mapping by generating a 3D point cloud from a 2D resolution.
-    In a full implementation, this would use a model like MiDaS or ZoeDepth.
+    Scans the input image and converts high-luminance pixels into 3D points.
+    Returns the path to the generated point cloud JSON.
     """
-    points = []
-    for y in range(resolution):
-        for x in range(resolution):
-            # Calculate normalized coords
-            nx = x / resolution
-            ny = y / resolution
-            
-            # Simulate a "Face-like" depth (spherical or topographic)
-            # Center of the grid is closest (higher Z)
-            dist_from_center = math.sqrt((nx-0.5)**2 + (ny-0.5)**2)
-            z = math.cos(dist_from_center * math.pi) * 50.0 # Depth amplitude
-            
-            # Add small 'detail' noise
-            z += random.uniform(-1, 1)
-            
-            points.append({
-                "x": (nx - 0.5) * 200, # Spread
-                "y": (ny - 0.5) * 200,
-                "z": z,
-                "r": 0.0, "g": 0.8, "b": 1.0, "a": 1.0 # Manifest Blue
-            })
-            
-    return points
+    print(f"🧬 Neural Depth Engine: Scanning {image_path}...")
+    
+    if not os.path.exists(image_path):
+        print(f"❌ Error: Image not found at {image_path}")
+        return None
 
-def export_cloud_for_niagara(points, output_path):
-    with open(output_path, "w") as f:
-        json.dump(points, f)
-    print(f"Generated {len(points)} points for Niagara Cloud at {output_path}")
+    try:
+        # Load and process image
+        img = Image.open(image_path).convert('L') # Grayscale
+        # Resize for performance (fingerprints are detailed, but ISMs have limits)
+        # 128x128 = 16k points, acceptable for ISM.
+        img = img.resize((128, 128)) 
+        data = np.array(img)
+        
+        points = []
+        width, height = img.size
+        
+        # Threshold: Only spawn points for the actual print ridges
+        # Map Brightness > 30 -> Point
+        
+        for y in range(height):
+            for x in range(width):
+                brightness = data[y][x]
+                if brightness > 30: # Threshold
+                    # Normalize coordinates centered at 0
+                    nx = (x - width/2) * 10
+                    ny = (y - height/2) * 10
+                    nz = (brightness / 255.0) * 50 # Height map from brightness
+                    
+                    points.append({
+                        "id": len(points),
+                        "t": [nx, ny, nz], # Translation
+                        "c": [0.0, 1.0, 1.0, brightness/255.0] # Cyan Color (R,G,B,A)
+                    })
+        
+        print(f"✨ Extracted {len(points)} holographic points.")
+        
+        # Save to JSON
+        with open(output_path, 'w') as f:
+            json.dump(points, f)
+            
+        return output_path
+        
+    except Exception as e:
+        print(f"❌ Processing Error: {e}")
+        return None
 
 if __name__ == "__main__":
-    import sys
-    img = sys.argv[1] if len(sys.argv) > 1 else "default_face.jpg"
-    out = "/Users/joeywalter/antigravity-nexus/shader_overlay/depth_cloud.json"
-    cloud = generate_depth_cloud(img)
-    export_cloud_for_niagara(cloud, out)
+    if len(sys.argv) < 2:
+        # Default test
+        target_img = "/Users/joeywalter/antigravity-nexus/Content/IMG_9279.png"
+    else:
+        target_img = sys.argv[1]
+        
+    out_json = "/Users/joeywalter/antigravity-nexus/Content/biometric_cloud.json"
+    generate_hologram_data(target_img, out_json)

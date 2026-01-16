@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nexus-signal-server
+  labels:
+    app: nexus-signal
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nexus-signal
+  template:
+    metadata:
+      labels:
+        app: nexus-signal
+    spec:
+      containers:
+      - name: signal-server
+        image: gcr.io/antigravity-nexus-v1/nexus-signal-server:latest
+        ports:
+        - containerPort: 80
+        - containerPort: 8888 # Streamer Port (Unreal -> Server)
+        - containerPort: 8080 # Http Port
+        env:
+        - name: STREAMER_PORT
+          value: "8888"
+        - name: HTTP_PORT
+          value: "8080"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nexus-signal-service
+spec:
+  selector:
+    app: nexus-signal
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+    name: http
+  - protocol: TCP
+    port: 8888
+    targetPort: 8888
+    name: streamer
+  type: LoadBalancer

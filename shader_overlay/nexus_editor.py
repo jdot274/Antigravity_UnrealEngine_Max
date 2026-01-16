@@ -13,6 +13,7 @@ class NexusMasterEditor(QMainWindow):
         super().__init__()
         self.setWindowTitle("NEXUS MASTER EDITOR")
         self.resize(1200, 800)
+        self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
         
         # Dark Theme Palette
         self.setStyleSheet("""
@@ -109,6 +110,26 @@ class NexusMasterEditor(QMainWindow):
         """)
         self.sync_btn.clicked.connect(self.launch_unreal_one_click)
         p_layout.addWidget(self.sync_btn)
+
+        # Stream Button
+        self.stream_btn = QPushButton("📡 GO LIVE (STREAM)")
+        self.stream_btn.setFixedSize(300, 50)
+        self.stream_btn.setStyleSheet("""
+            QPushButton {
+                background-color: #f97316;
+                color: white;
+                font-weight: 900;
+                font-size: 14px;
+                border-radius: 8px;
+                margin-top: 10px;
+            }
+            QPushButton:hover {
+                background-color: #ea580c;
+                border: 2px solid #00f2ff;
+            }
+        """)
+        self.stream_btn.clicked.connect(self.launch_stream_mode)
+        p_layout.addWidget(self.stream_btn)
         
         p_label = QLabel("Click to manifest the Neural Graphics Lab & Engine Twins")
         p_label.setStyleSheet("color: #737aa2; font-weight: 500; font-size: 12px; margin-top: 10px;")
@@ -146,6 +167,11 @@ class NexusMasterEditor(QMainWindow):
         notif_action = QAction("Notification Stack", self)
         notif_action.triggered.connect(self.launch_notifications)
         window_menu.addAction(notif_action)
+        
+        # Launch Wizard
+        wiz_action = QAction("Protocol Wizard (Sequential)", self)
+        wiz_action.triggered.connect(self.launch_wizard)
+        window_menu.addAction(wiz_action)
 
         # Tools Menu
         tools_menu = menubar.addMenu("Tools")
@@ -166,6 +192,10 @@ class NexusMasterEditor(QMainWindow):
         cmd = ["/Users/joeywalter/antigravity-nexus/shader_overlay/venv/bin/python3", "/Users/joeywalter/antigravity-nexus/shader_overlay/nexus_notifier.py"]
         subprocess.Popen(cmd, start_new_session=True)
 
+    def launch_wizard(self):
+        cmd = ["/Users/joeywalter/antigravity-nexus/shader_overlay/venv/bin/python3", "/Users/joeywalter/antigravity-nexus/shader_overlay/nexus_wizard.py"]
+        subprocess.Popen(cmd, start_new_session=True)
+
     def launch_visualizer(self):
         cmd = ["/Users/joeywalter/antigravity-nexus/shader_overlay/venv/bin/python3", "/Users/joeywalter/antigravity-nexus/shader_overlay/visualizer_launcher.py"]
         subprocess.Popen(cmd, start_new_session=True)
@@ -173,6 +203,15 @@ class NexusMasterEditor(QMainWindow):
     def launch_unreal_one_click(self):
         cmd = ["/Users/joeywalter/antigravity-nexus/shader_overlay/venv/bin/python3", "/Users/joeywalter/antigravity-nexus/shader_overlay/nexus_one_click.py"]
         subprocess.Popen(cmd, start_new_session=True)
+
+    def launch_stream_mode(self):
+        print("📡 Triggering ANTIGRAVITY STREAM...")
+        cmd = ["/Users/joeywalter/antigravity-nexus/shader_overlay/venv/bin/python3", "/Users/joeywalter/antigravity-nexus/shader_overlay/nexus_stream.py"]
+        subprocess.Popen(cmd, start_new_session=True)
+
+    def closeEvent(self, event):
+        event.ignore()
+        print("Master Editor is eternal.")
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

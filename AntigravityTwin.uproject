@@ -13,6 +13,11 @@
 				"UMG",
 				"Blutility"
 			]
+		},
+		{
+			"Name": "NexusRuntime",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
 		}
 	],
 	"Plugins": [
@@ -66,7 +71,12 @@
 		},
 		{
 			"Name": "NeuralRendering",
-			"Enabled": true
+			"Enabled": true,
+			"SupportedTargetPlatforms": [
+				"Win64",
+				"Linux",
+				"Mac"
+			]
 		},
 		{
 			"Name": "NNERuntimeBasicCpu",
@@ -97,7 +107,10 @@
 			"Enabled": true,
 			"SupportedTargetPlatforms": [
 				"IOS",
-				"Mac"
+				"Win64",
+				"Mac",
+				"Linux",
+				"Android"
 			]
 		},
 		{
@@ -107,6 +120,71 @@
 		{
 			"Name": "EnhancedInput",
 			"Enabled": true
+		},
+		{
+			"Name": "ActorLocker",
+			"Enabled": true
+		},
+		{
+			"Name": "ActorModifier",
+			"Enabled": true
+		},
+		{
+			"Name": "ActorPalette",
+			"Enabled": true
+		},
+		{
+			"Name": "ActorModifierCore",
+			"Enabled": true
+		},
+		{
+			"Name": "Adjust",
+			"Enabled": true
+		},
+		{
+			"Name": "ADOSupport",
+			"Enabled": true
+		},
+		{
+			"Name": "AESGCMHandlerComponent",
+			"Enabled": true
+		},
+		{
+			"Name": "AESHandlerComponent",
+			"Enabled": true
+		},
+		{
+			"Name": "AjaMedia",
+			"Enabled": true,
+			"SupportedTargetPlatforms": [
+				"Win64"
+			]
+		},
+		{
+			"Name": "AlembicHairImporter",
+			"Enabled": true
+		},
+		{
+			"Name": "LiveLinkXR",
+			"Enabled": true,
+			"SupportedTargetPlatforms": [
+				"Win64"
+			]
+		},
+		{
+			"Name": "LiveLinkVRPN",
+			"Enabled": true
+		},
+		{
+			"Name": "LiveLinkPrestonMDR",
+			"Enabled": true
+		},
+		{
+			"Name": "LiveLinkOpenVR",
+			"Enabled": true,
+			"SupportedTargetPlatforms": [
+				"Win64"
+			]
 		}
 	]
 }

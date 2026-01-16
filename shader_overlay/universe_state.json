@@ -1,49 +1,9 @@
 {
-    "nodes": [
-        {
-            "name": "Twin Sync Status",
-            "status": "ACCEPTED",
-            "notes": "Unreal-Twin Parallelism active and verified."
-        },
-        {
-            "name": "UE 5.7 C++ RAG",
-            "status": "ACCEPTED",
-            "notes": "Live Intelligence active. Zero-lag C++ generation enabled."
-        },
-        {
-            "name": "Context 7 Protocol",
-            "status": "ACCEPTED",
-            "notes": "Live Intelligence active. Zero-lag C++ generation enabled."
-        },
-        {
-            "name": "UE C++ Snippet Helper",
-            "status": "ACCEPTED",
-            "notes": "Integrated with extension 'openpixel.unreal-engine-4-helper'."
-        },
-        {
-            "name": "Mission Pod Builder",
-            "status": "RESEARCH",
-            "notes": "Analyzing C++ boilerplate for containerized mission logic."
-        },
-        {
-            "name": "Socket 3003 Bridge",
-            "status": "ACCEPTED",
-            "notes": "Live communication with Unreal Engine Console confirmed."
-        },
-        {
-            "name": "Level Instance Logic",
-            "status": "PROPOSED",
-            "notes": "Using dynamic loading for isolated pods."
-        },
-        {
-            "name": "Legacy Hot-Reload",
-            "status": "FAILED",
-            "notes": "Rejected. Using Live Coding."
-        },
-        {
-            "name": "AI Agent Status",
-            "status": "ACTIVE",
-            "notes": "Real-time engine integration active."
-        }
-    ]
+    "tennis_score": {
+        "p1": 0,
+        "p2": 0
+    },
+    "screen_distortion": 5.0,
+    "bloom_intensity": 3.0,
+    "ortho_zoom": 5000.0
 }
