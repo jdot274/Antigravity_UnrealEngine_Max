@@ -3,7 +3,7 @@
 # Connects to the locally running Signalling Server (ws://127.0.0.1:8888)
 
 # Paths (Adjust if your UE5 installation is elsewhere)
-UE5_PATH="/Users/Shared/Epic Games/UE_5.5/Engine/Binaries/Mac/UnrealEditor.app/Contents/MacOS/UnrealEditor"
+UE5_PATH="/Users/Shared/Epic Games/UE_5.7/Engine/Binaries/Mac/UnrealEditor.app/Contents/MacOS/UnrealEditor"
 PROJECT_PATH="$(pwd)/AntigravityTwin.uproject"
 
 # Configuration from Manifest (Hardcoded here for shell simplicity, but matches JSON)

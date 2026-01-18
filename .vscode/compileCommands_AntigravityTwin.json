@@ -1,0 +1,122 @@
+[
+	{
+		"file": "/Users/joeywalter/antigravity-nexus/Source/AntigravityTwin/AntigravityTwin.Build.cs",
+		"arguments": [
+			"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++",
+			"@/Users/joeywalter/antigravity-nexus/.vscode/compileCommands_AntigravityTwin/AntigravityTwin.1.rsp"
+		],
+		"directory": "/Users/Shared/Epic Games/UE_5.7/Engine/Source"
+	},
+	{
+		"file": "/Users/joeywalter/antigravity-nexus/Source/AntigravityTwin/AntigravityTwin.cpp",
+		"arguments": [
+			"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++",
+			"@/Users/joeywalter/antigravity-nexus/.vscode/compileCommands_AntigravityTwin/AntigravityTwin.1.rsp"
+		],
+		"directory": "/Users/Shared/Epic Games/UE_5.7/Engine/Source"
+	},
+	{
+		"file": "/Users/joeywalter/antigravity-nexus/Source/AntigravityTwin/AntigravityTwin.h",
+		"arguments": [
+			"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++",
+			"@/Users/joeywalter/antigravity-nexus/.vscode/compileCommands_AntigravityTwin/AntigravityTwin.1.rsp"
+		],
+		"directory": "/Users/Shared/Epic Games/UE_5.7/Engine/Source"
+	},
+	{
+		"file": "/Users/joeywalter/antigravity-nexus/Source/NexusRuntime/NexusRuntime.Build.cs",
+		"arguments": [
+			"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++",
+			"@/Users/joeywalter/antigravity-nexus/.vscode/compileCommands_AntigravityTwin/NexusRuntime.2.rsp"
+		],
+		"directory": "/Users/Shared/Epic Games/UE_5.7/Engine/Source"
+	},
+	{
+		"file": "/Users/joeywalter/antigravity-nexus/Source/NexusRuntime/Private/NexusBridge.cpp",
+		"arguments": [
+			"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++",
+			"@/Users/joeywalter/antigravity-nexus/.vscode/compileCommands_AntigravityTwin/NexusRuntime.2.rsp"
+		],
+		"directory": "/Users/Shared/Epic Games/UE_5.7/Engine/Source"
+	},
+	{
+		"file": "/Users/joeywalter/antigravity-nexus/Source/NexusRuntime/Private/NexusGameMode.cpp",
+		"arguments": [
+			"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++",
+			"@/Users/joeywalter/antigravity-nexus/.vscode/compileCommands_AntigravityTwin/NexusRuntime.2.rsp"
+		],
+		"directory": "/Users/Shared/Epic Games/UE_5.7/Engine/Source"
+	},
+	{
+		"file": "/Users/joeywalter/antigravity-nexus/Source/NexusRuntime/Private/NexusGeneratedArchetypes.cpp",
+		"arguments": [
+			"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++",
+			"@/Users/joeywalter/antigravity-nexus/.vscode/compileCommands_AntigravityTwin/NexusRuntime.2.rsp"
+		],
+		"directory": "/Users/Shared/Epic Games/UE_5.7/Engine/Source"
+	},
+	{
+		"file": "/Users/joeywalter/antigravity-nexus/Source/NexusRuntime/Private/NexusPawn.cpp",
+		"arguments": [
+			"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++",
+			"@/Users/joeywalter/antigravity-nexus/.vscode/compileCommands_AntigravityTwin/NexusRuntime.2.rsp"
+		],
+		"directory": "/Users/Shared/Epic Games/UE_5.7/Engine/Source"
+	},
+	{
+		"file": "/Users/joeywalter/antigravity-nexus/Source/NexusRuntime/Private/NexusRuntimeModule.cpp",
+		"arguments": [
+			"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++",
+			"@/Users/joeywalter/antigravity-nexus/.vscode/compileCommands_AntigravityTwin/NexusRuntime.2.rsp"
+		],
+		"directory": "/Users/Shared/Epic Games/UE_5.7/Engine/Source"
+	},
+	{
+		"file": "/Users/joeywalter/antigravity-nexus/Source/NexusRuntime/Public/## All MCP servers",
+		"arguments": [
+			"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++",
+			"@/Users/joeywalter/antigravity-nexus/.vscode/compileCommands_AntigravityTwin/NexusRuntime.2.rsp"
+		],
+		"directory": "/Users/Shared/Epic Games/UE_5.7/Engine/Source"
+	},
+	{
+		"file": "/Users/joeywalter/antigravity-nexus/Source/NexusRuntime/Public/NexusBridge.h",
+		"arguments": [
+			"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++",
+			"@/Users/joeywalter/antigravity-nexus/.vscode/compileCommands_AntigravityTwin/NexusRuntime.2.rsp"
+		],
+		"directory": "/Users/Shared/Epic Games/UE_5.7/Engine/Source"
+	},
+	{
+		"file": "/Users/joeywalter/antigravity-nexus/Source/NexusRuntime/Public/NexusGameMode.h",
+		"arguments": [
+			"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++",
+			"@/Users/joeywalter/antigravity-nexus/.vscode/compileCommands_AntigravityTwin/NexusRuntime.2.rsp"
+		],
+		"directory": "/Users/Shared/Epic Games/UE_5.7/Engine/Source"
+	},
+	{
+		"file": "/Users/joeywalter/antigravity-nexus/Source/NexusRuntime/Public/NexusGeneratedArchetypes.h",
+		"arguments": [
+			"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++",
+			"@/Users/joeywalter/antigravity-nexus/.vscode/compileCommands_AntigravityTwin/NexusRuntime.2.rsp"
+		],
+		"directory": "/Users/Shared/Epic Games/UE_5.7/Engine/Source"
+	},
+	{
+		"file": "/Users/joeywalter/antigravity-nexus/Source/NexusRuntime/Public/NexusPawn.h",
+		"arguments": [
+			"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++",
+			"@/Users/joeywalter/antigravity-nexus/.vscode/compileCommands_AntigravityTwin/NexusRuntime.2.rsp"
+		],
+		"directory": "/Users/Shared/Epic Games/UE_5.7/Engine/Source"
+	},
+	{
+		"file": "/Users/joeywalter/antigravity-nexus/Source/NexusRuntime/Public/NexusRuntimeModule.h",
+		"arguments": [
+			"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++",
+			"@/Users/joeywalter/antigravity-nexus/.vscode/compileCommands_AntigravityTwin/NexusRuntime.2.rsp"
+		],
+		"directory": "/Users/Shared/Epic Games/UE_5.7/Engine/Source"
+	}
+]

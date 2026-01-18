@@ -12,7 +12,22 @@ public class NexusRuntime : ModuleRules
             "HTTP", 
             "Json", 
             "JsonUtilities",
-            "PixelStreaming" // For predictive streaming hook
+            "PixelStreaming", // For predictive streaming hook
+            "ProceduralMeshComponent",
+            "UMG",
+            "Slate",
+            "SlateCore"
         });
+
+        if (Target.bBuildEditor)
+        {
+            PrivateDependencyModuleNames.AddRange(new string[] {
+                "UnrealEd",
+                "AssetTools",
+                "AssetRegistry",
+                "KismetCompiler",
+                "BlueprintGraph"
+            });
+        }
 	}
 }

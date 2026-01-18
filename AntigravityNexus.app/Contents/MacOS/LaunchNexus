@@ -1,0 +1,12 @@
+#!/bin/bash
+# Antigravity Nexus App Launcher wrapper
+
+# Get Project Root (3 levels up from Contents/MacOS)
+APP_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+# Hardcoded Project Path for Desktop Shortcut Portability
+PROJECT_ROOT="/Users/joeywalter/antigravity-nexus"
+
+echo "🚀 Launching from: $PROJECT_ROOT"
+
+# Open the Master Terminal Command in a new Terminal window
+open -a Terminal "$PROJECT_ROOT/AntigravityNexus.command"

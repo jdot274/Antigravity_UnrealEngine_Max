@@ -1,0 +1,13 @@
+{
+    "python.defaultInterpreterPath": "${workspaceFolder}/shader_overlay/venv/bin/python3",
+    "python.analysis.typeCheckingMode": "basic",
+    "python.analysis.extraPaths": [
+        "${workspaceFolder}/shader_overlay"
+    ],
+    "files.exclude": {
+        "**/__pycache__": true,
+        "**/*.spec": true,
+        "**/build": true,
+        "**/dist": true
+    }
+}

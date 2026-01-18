@@ -1,20 +1,21 @@
-dist/
-build/
+# Security
 node_modules/
-venv/
-*.app/
-*.uproject
-*.uasset
-*.umap
-Binaries/
-Intermediate/
-DerivedDataCache/
-Saved/
-.DS_Store
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
 .env
-.idea/
-.vscode/
+.nexus_env/
+.DS_Store
+Intermediate/
+Binaries/
+Saved/
+DerivedDataCache/
+Builds/
+*.xcodeproj
+*.xcworkspace
+
+# Temp / Distribution
+dist/
+dist 2/
+*.sqlite
+*.log
+bridge/SignallingWebServer/logs/
+shader_overlay/
+*.zip

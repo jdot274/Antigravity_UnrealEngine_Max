@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Mesh Volume</title>
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: transparent;
+            font-family: 'Inter', sans-serif;
+            color: white;
+        }
+
+        #container {
+            width: 95%;
+            height: 95%;
+            background: rgba(5, 5, 8, 0.95);
+            backdrop-filter: blur(50px);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 24px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 80px rgba(0, 255, 255, 0.2);
+        }
+
+        .hud {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 10;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .title {
+            font-size: 14px;
+            font-weight: 900;
+            letter-spacing: 3px;
+            color: #00ffff;
+        }
+
+        .stats {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 8px;
+            color: #4ade80;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .node-counter {
+            font-size: 24px;
+            font-weight: 900;
+            color: #fff;
+            margin-top: 10px;
+        }
+    </style>
+    <script src="three.min.js"></script>
+<link rel="stylesheet" href="theme.css"></head>
+
+<body>
+    <div id="container">
+        <div class="hud">
+            <div class="header">
+                <div>
+                    <div class="title">VIRTUAL MESH VOLUME</div>
+                    <div style="font-size: 10px; opacity: 0.6;">NANITE_RESIDENT_CLUSTERS</div>
+                    <div class="node-counter" id="cluster-count">142,004</div>
+                </div>
+                <div style="text-align: right;">
+                    <div class="stats">DISK: 84.5 MB/S</div>
+                    <div class="stats">VIRTUAL_PAGES: 4,096</div>
+                    <div class="stats">STRATEGY: NANITE_HIERARCHY</div>
+                </div>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                <div class="stats">STATUS: RECEIVING_ASSET_DATA...</div>
+                <div style="font-size: 8px; opacity: 0.3;">RENDER_MODE: CLUSTER_VISUALIZER</div>
+            </div>
+        </div>
+        <canvas id="volumeCanvas"></canvas>
+    </div>
+
+    <script>
+        window.addEventListener('load', () => {
+            const canvas = document.getElementById('volumeCanvas');
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(60, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+            renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+
+            const meshGroup = new THREE.Group();
+            scene.add(meshGroup);
+
+            // Virtual Volume Geometry (The "Mesh")
+            const geometry = new THREE.IcosahedronGeometry(2.5, 6);
+            const material = new THREE.ShaderMaterial({
+                uniforms: { u_time: { value: 0 } },
+                transparent: true,
+                vertexShader: `
+                    varying vec3 vPos;
+                    void main() {
+                        vPos = position;
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                    }
+                `,
+                fragmentShader: `
+                    uniform float u_time;
+                    varying vec3 vPos;
+                    void main() {
+                        float dist = length(vPos);
+                        float grid = abs(sin(vPos.x * 10.0 + u_time) * sin(vPos.y * 10.0) * sin(vPos.z * 10.0));
+                        float alpha = smoothstep(0.9, 0.98, grid);
+                        gl_FragColor = vec4(0.0, 1.0, 1.0, alpha * 0.4);
+                    }
+                `
+            });
+            const volume = new THREE.Mesh(geometry, material);
+            meshGroup.add(volume);
+
+            // Particles (Streaming Data)
+            const count = 1000;
+            const pointsPos = new Float32Array(count * 3);
+            for (let i = 0; i < count; i++) {
+                pointsPos[i * 3] = (Math.random() - 0.5) * 8;
+                pointsPos[i * 3 + 1] = (Math.random() - 0.5) * 8;
+                pointsPos[i * 3 + 2] = (Math.random() - 0.5) * 8;
+            }
+            const pointsGeo = new THREE.BufferGeometry();
+            pointsGeo.setAttribute('position', new THREE.BufferAttribute(pointsPos, 3));
+            const pointsMat = new THREE.PointsMaterial({ color: 0x00ffff, size: 0.02, transparent: true, opacity: 0.6 });
+            const points = new THREE.Points(pointsGeo, pointsMat);
+            scene.add(points);
+
+            camera.position.z = 7;
+
+            function animate(time) {
+                const t = time * 0.001;
+                material.uniforms.u_time.value = t;
+                meshGroup.rotation.y = t * 0.1;
+                points.rotation.y = -t * 0.05;
+
+                // Pulsate cluster count
+                document.getElementById('cluster-count').innerText =
+                    (142004 + Math.floor(Math.random() * 50)).toLocaleString();
+
+                renderer.render(scene, camera);
+                requestAnimationFrame(animate);
+            }
+            animate(0);
+        });
+    </script>
+</body>
+
+</html>

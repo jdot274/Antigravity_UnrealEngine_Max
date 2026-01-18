@@ -22,6 +22,10 @@
 	],
 	"Plugins": [
 		{
+			"Name": "ProceduralMeshComponent",
+			"Enabled": true
+		},
+		{
 			"Name": "PythonScriptPlugin",
 			"Enabled": true
 		},
@@ -34,64 +38,7 @@
 			"Enabled": true
 		},
 		{
-			"Name": "Niagara",
-			"Enabled": true
-		},
-		{
 			"Name": "PixelStreaming",
-			"Enabled": true
-		},
-		{
-			"Name": "PixelStreamingPlayer",
-			"Enabled": true
-		},
-		{
-			"Name": "NiagaraFluids",
-			"Enabled": true
-		},
-		{
-			"Name": "GeometryScripting",
-			"Enabled": true
-		},
-		{
-			"Name": "ProceduralMeshComponent",
-			"Enabled": true
-		},
-		{
-			"Name": "WebBrowserWidget",
-			"Enabled": true
-		},
-		{
-			"Name": "WebSocketNetworking",
-			"Enabled": true
-		},
-		{
-			"Name": "JsonBlueprintUtilities",
-			"Enabled": true
-		},
-		{
-			"Name": "NeuralRendering",
-			"Enabled": true,
-			"SupportedTargetPlatforms": [
-				"Win64",
-				"Linux",
-				"Mac"
-			]
-		},
-		{
-			"Name": "NNERuntimeBasicCpu",
-			"Enabled": true
-		},
-		{
-			"Name": "NNERuntimeCoreML",
-			"Enabled": true
-		},
-		{
-			"Name": "RemoteControl",
-			"Enabled": true
-		},
-		{
-			"Name": "RemoteControlWebInterface",
 			"Enabled": true
 		},
 		{
@@ -99,26 +46,7 @@
 			"Enabled": true
 		},
 		{
-			"Name": "LiveLink",
-			"Enabled": true
-		},
-		{
-			"Name": "AppleARKit",
-			"Enabled": true,
-			"SupportedTargetPlatforms": [
-				"IOS",
-				"Win64",
-				"Mac",
-				"Linux",
-				"Android"
-			]
-		},
-		{
-			"Name": "CommonUI",
-			"Enabled": true
-		},
-		{
-			"Name": "EnhancedInput",
+			"Name": "BlueprintScreenshotTool",
 			"Enabled": true
 		},
 		{
@@ -126,65 +54,66 @@
 			"Enabled": true
 		},
 		{
-			"Name": "ActorModifier",
-			"Enabled": true
+			"Name": "FileHelper",
+			"Enabled": true,
+			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/bec5be3d587f4ff49a61d45d0e81e4c0"
 		},
 		{
-			"Name": "ActorPalette",
-			"Enabled": true
-		},
-		{
-			"Name": "ActorModifierCore",
-			"Enabled": true
-		},
-		{
-			"Name": "Adjust",
-			"Enabled": true
-		},
-		{
-			"Name": "ADOSupport",
-			"Enabled": true
-		},
-		{
-			"Name": "AESGCMHandlerComponent",
-			"Enabled": true
-		},
-		{
-			"Name": "AESHandlerComponent",
-			"Enabled": true
-		},
-		{
-			"Name": "AjaMedia",
+			"Name": "NiagaraUIRenderer",
 			"Enabled": true,
 			"SupportedTargetPlatforms": [
-				"Win64"
+				"Win64",
+				"Android"
 			]
 		},
 		{
-			"Name": "AlembicHairImporter",
-			"Enabled": true
-		},
-		{
-			"Name": "LiveLinkXR",
+			"Name": "CesiumForUnreal",
 			"Enabled": true,
+			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/content/87b0d05800a545d49bf858ef3458c4f7",
 			"SupportedTargetPlatforms": [
-				"Win64"
+				"Win64",
+				"Mac",
+				"Linux",
+				"Android",
+				"IOS"
 			]
 		},
 		{
-			"Name": "LiveLinkVRPN",
-			"Enabled": true
-		},
-		{
-			"Name": "LiveLinkPrestonMDR",
-			"Enabled": true
-		},
-		{
-			"Name": "LiveLinkOpenVR",
+			"Name": "WebSocket",
 			"Enabled": true,
-			"SupportedTargetPlatforms": [
-				"Win64"
-			]
+			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/content/3e907e815a5e4b92ba0191a6e1172d73"
+		},
+		{
+			"Name": "EnhancedCodeFlow",
+			"Enabled": true,
+			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/0e9dd2a8f807456da0fe6af280ab795c"
+		},
+		{
+			"Name": "SlateStyleBrowser",
+			"Enabled": true,
+			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/7f51deb58ead4fed88abc798ca7c9ae4"
+		},
+		{
+			"Name": "CloudsLighting",
+			"Enabled": true,
+			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/a54a45caa08e41bb97b1c19cebfe1093"
+		},
+		{
+			"Name": "ExtendBlueprintNode",
+			"Enabled": true,
+			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/236a37aee6064f9183b7d77343d22f38"
+		},
+		{
+			"Name": "ScreenReader",
+			"Enabled": true
+		},
+		{
+			"Name": "SlateScreenReader",
+			"Enabled": true
+		},
+		{
+			"Name": "TextToSpeech",
+			"Enabled": true
 		}
 	]
 }

@@ -1,0 +1,75 @@
+{
+    "name": "antigravity-gemini-assist",
+    "displayName": "Antigravity Gemini Assist",
+    "icon": "icon.png",
+    "description": "A Gemini-powered command palette that appears when you hover or click in the IDE.",
+    "version": "0.0.1",
+    "publisher": "antigravity",
+    "engines": {
+        "vscode": "^1.80.0"
+    },
+    "categories": [
+        "AI",
+        "Other"
+    ],
+    "activationEvents": [
+        "onStartupFinished"
+    ],
+    "main": "./out/extension.js",
+    "contributes": {
+        "commands": [
+            {
+                "command": "antigravity.explainCode",
+                "title": "Gemini: Explain Code",
+                "category": "Antigravity"
+            },
+            {
+                "command": "antigravity.generateTests",
+                "title": "Gemini: Generate Tests",
+                "category": "Antigravity"
+            },
+            {
+                "command": "antigravity.refactorCode",
+                "title": "Gemini: Refactor Code",
+                "category": "Antigravity"
+            },
+            {
+                "command": "antigravity.askGemini",
+                "title": "Gemini: Ask...",
+                "category": "Antigravity"
+            }
+        ],
+        "configuration": {
+            "title": "Antigravity Gemini",
+            "properties": {
+                "antigravity.gemini.apiKey": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Your Google Gemini API Key"
+                },
+                "antigravity.gemini.model": {
+                    "type": "string",
+                    "default": "gemini-pro",
+                    "description": "The Gemini model to use"
+                }
+            }
+        }
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "pretest": "npm run compile && npm run lint",
+        "lint": "eslint src --ext ts",
+        "package": "vsce package"
+    },
+    "devDependencies": {
+        "@types/vscode": "^1.80.0",
+        "@types/node": "18.x",
+        "@typescript-eslint/eslint-plugin": "^6.4.1",
+        "@typescript-eslint/parser": "^6.4.1",
+        "eslint": "^8.47.0",
+        "typescript": "^5.1.6",
+        "vsce": "^2.15.0"
+    }
+}

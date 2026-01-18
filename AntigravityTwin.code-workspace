@@ -1,0 +1,588 @@
+{
+	"folders": [
+		{
+			"name": "AntigravityTwin",
+			"path": "."
+		},
+		{
+			"name": "UE5",
+			"path": "/Users/Shared/Epic Games/UE_5.7"
+		}
+	],
+	"settings": {
+		"typescript.tsc.autoDetect": "off",
+		"npm.autoDetect": "off",
+		"terminal.integrated.env.mac": {
+			"PATH": "/Users/Shared/Epic Games/UE_5.7/Engine/Binaries/ThirdParty/DotNet/8.0.412/mac-arm64:${env:PATH}",
+			"DOTNET_ROOT": "/Users/Shared/Epic Games/UE_5.7/Engine/Binaries/ThirdParty/DotNet/8.0.412/mac-arm64",
+			"DOTNET_HOST_PATH": "/Users/Shared/Epic Games/UE_5.7/Engine/Binaries/ThirdParty/DotNet/8.0.412/mac-arm64/dotnet",
+			"DOTNET_MULTILEVEL_LOOKUP": "0",
+			"DOTNET_ROLL_FORWARD": "LatestMajor"
+		}
+	},
+	"extensions": {
+		"recommendations": [
+			"ms-vscode.cpptools",
+			"ms-dotnettools.csharp"
+		]
+	},
+	"tasks": {
+		"version": "2.0.0",
+		"tasks": [
+			{
+				"label": "AntigravityTwin Mac Debug Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"AntigravityTwin",
+					"Mac",
+					"Debug",
+					"/Users/joeywalter/antigravity-nexus/AntigravityTwin.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "AntigravityTwin Mac Debug Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"AntigravityTwin",
+					"Mac",
+					"Debug",
+					"/Users/joeywalter/antigravity-nexus/AntigravityTwin.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"AntigravityTwin Mac Debug Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "AntigravityTwin Mac Debug Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"AntigravityTwin",
+					"Mac",
+					"Debug",
+					"/Users/joeywalter/antigravity-nexus/AntigravityTwin.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "AntigravityTwin Mac DebugGame Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"AntigravityTwin",
+					"Mac",
+					"DebugGame",
+					"/Users/joeywalter/antigravity-nexus/AntigravityTwin.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "AntigravityTwin Mac DebugGame Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"AntigravityTwin",
+					"Mac",
+					"DebugGame",
+					"/Users/joeywalter/antigravity-nexus/AntigravityTwin.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"AntigravityTwin Mac DebugGame Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "AntigravityTwin Mac DebugGame Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"AntigravityTwin",
+					"Mac",
+					"DebugGame",
+					"/Users/joeywalter/antigravity-nexus/AntigravityTwin.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "AntigravityTwin Mac Development Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"AntigravityTwin",
+					"Mac",
+					"Development",
+					"/Users/joeywalter/antigravity-nexus/AntigravityTwin.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "AntigravityTwin Mac Development Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"AntigravityTwin",
+					"Mac",
+					"Development",
+					"/Users/joeywalter/antigravity-nexus/AntigravityTwin.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"AntigravityTwin Mac Development Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "AntigravityTwin Mac Development Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"AntigravityTwin",
+					"Mac",
+					"Development",
+					"/Users/joeywalter/antigravity-nexus/AntigravityTwin.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "AntigravityTwin Mac Test Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"AntigravityTwin",
+					"Mac",
+					"Test",
+					"/Users/joeywalter/antigravity-nexus/AntigravityTwin.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "AntigravityTwin Mac Test Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"AntigravityTwin",
+					"Mac",
+					"Test",
+					"/Users/joeywalter/antigravity-nexus/AntigravityTwin.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"AntigravityTwin Mac Test Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "AntigravityTwin Mac Test Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"AntigravityTwin",
+					"Mac",
+					"Test",
+					"/Users/joeywalter/antigravity-nexus/AntigravityTwin.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "AntigravityTwin Mac Shipping Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"AntigravityTwin",
+					"Mac",
+					"Shipping",
+					"/Users/joeywalter/antigravity-nexus/AntigravityTwin.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "AntigravityTwin Mac Shipping Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"AntigravityTwin",
+					"Mac",
+					"Shipping",
+					"/Users/joeywalter/antigravity-nexus/AntigravityTwin.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"AntigravityTwin Mac Shipping Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "AntigravityTwin Mac Shipping Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"AntigravityTwin",
+					"Mac",
+					"Shipping",
+					"/Users/joeywalter/antigravity-nexus/AntigravityTwin.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "AntigravityTwinEditor Mac Debug Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"AntigravityTwinEditor",
+					"Mac",
+					"Debug",
+					"/Users/joeywalter/antigravity-nexus/AntigravityTwin.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "AntigravityTwinEditor Mac Debug Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"AntigravityTwinEditor",
+					"Mac",
+					"Debug",
+					"/Users/joeywalter/antigravity-nexus/AntigravityTwin.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"AntigravityTwinEditor Mac Debug Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "AntigravityTwinEditor Mac Debug Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"AntigravityTwinEditor",
+					"Mac",
+					"Debug",
+					"/Users/joeywalter/antigravity-nexus/AntigravityTwin.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "AntigravityTwinEditor Mac DebugGame Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"AntigravityTwinEditor",
+					"Mac",
+					"DebugGame",
+					"/Users/joeywalter/antigravity-nexus/AntigravityTwin.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "AntigravityTwinEditor Mac DebugGame Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"AntigravityTwinEditor",
+					"Mac",
+					"DebugGame",
+					"/Users/joeywalter/antigravity-nexus/AntigravityTwin.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"AntigravityTwinEditor Mac DebugGame Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "AntigravityTwinEditor Mac DebugGame Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"AntigravityTwinEditor",
+					"Mac",
+					"DebugGame",
+					"/Users/joeywalter/antigravity-nexus/AntigravityTwin.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "AntigravityTwinEditor Mac Development Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"AntigravityTwinEditor",
+					"Mac",
+					"Development",
+					"/Users/joeywalter/antigravity-nexus/AntigravityTwin.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "AntigravityTwinEditor Mac Development Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"AntigravityTwinEditor",
+					"Mac",
+					"Development",
+					"/Users/joeywalter/antigravity-nexus/AntigravityTwin.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"AntigravityTwinEditor Mac Development Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			},
+			{
+				"label": "AntigravityTwinEditor Mac Development Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Mac/Build.sh",
+				"args": [
+					"AntigravityTwinEditor",
+					"Mac",
+					"Development",
+					"/Users/joeywalter/antigravity-nexus/AntigravityTwin.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/Users/Shared/Epic Games/UE_5.7"
+				}
+			}
+		]
+	},
+	"launch": {
+		"version": "0.2.0",
+		"configurations": [
+			{
+				"name": "Launch AntigravityTwin (Debug)",
+				"request": "launch",
+				"program": "/Users/joeywalter/antigravity-nexus/Binaries/Mac/UnrealGame-Mac-Debug.app/Contents/MacOS/UnrealGame-Mac-Debug",
+				"preLaunchTask": "AntigravityTwin Mac Debug Build",
+				"args": [
+				],
+				"cwd": "/Users/Shared/Epic Games/UE_5.7",
+				"type": "lldb"
+			},
+			{
+				"name": "Launch AntigravityTwin (DebugGame)",
+				"request": "launch",
+				"program": "/Users/joeywalter/antigravity-nexus/Binaries/Mac/UnrealGame-Mac-DebugGame.app/Contents/MacOS/UnrealGame-Mac-DebugGame",
+				"preLaunchTask": "AntigravityTwin Mac DebugGame Build",
+				"args": [
+				],
+				"cwd": "/Users/Shared/Epic Games/UE_5.7",
+				"type": "lldb"
+			},
+			{
+				"name": "Launch AntigravityTwin (Development)",
+				"request": "launch",
+				"program": "/Users/joeywalter/antigravity-nexus/Binaries/Mac/UnrealGame.app/Contents/MacOS/UnrealGame",
+				"preLaunchTask": "AntigravityTwin Mac Development Build",
+				"args": [
+				],
+				"cwd": "/Users/Shared/Epic Games/UE_5.7",
+				"type": "lldb"
+			},
+			{
+				"name": "Launch AntigravityTwin (Test)",
+				"request": "launch",
+				"program": "/Users/joeywalter/antigravity-nexus/Binaries/Mac/UnrealGame-Mac-Test.app/Contents/MacOS/UnrealGame-Mac-Test",
+				"preLaunchTask": "AntigravityTwin Mac Test Build",
+				"args": [
+				],
+				"cwd": "/Users/Shared/Epic Games/UE_5.7",
+				"type": "lldb"
+			},
+			{
+				"name": "Launch AntigravityTwin (Shipping)",
+				"request": "launch",
+				"program": "/Users/joeywalter/antigravity-nexus/Binaries/Mac/UnrealGame-Mac-Shipping.app/Contents/MacOS/UnrealGame-Mac-Shipping",
+				"preLaunchTask": "AntigravityTwin Mac Shipping Build",
+				"args": [
+				],
+				"cwd": "/Users/Shared/Epic Games/UE_5.7",
+				"type": "lldb"
+			},
+			{
+				"name": "Launch AntigravityTwinEditor (Debug)",
+				"request": "launch",
+				"program": "/Users/Shared/Epic Games/UE_5.7/Engine/Binaries/Mac/UnrealEditor-Mac-Debug.app/Contents/MacOS/UnrealEditor-Mac-Debug",
+				"preLaunchTask": "AntigravityTwinEditor Mac Debug Build",
+				"args": [
+					"/Users/joeywalter/antigravity-nexus/AntigravityTwin.uproject"
+				],
+				"cwd": "/Users/Shared/Epic Games/UE_5.7",
+				"type": "lldb"
+			},
+			{
+				"name": "Launch AntigravityTwinEditor (DebugGame)",
+				"request": "launch",
+				"program": "/Users/Shared/Epic Games/UE_5.7/Engine/Binaries/Mac/UnrealEditor-Mac-DebugGame.app/Contents/MacOS/UnrealEditor-Mac-DebugGame",
+				"preLaunchTask": "AntigravityTwinEditor Mac DebugGame Build",
+				"args": [
+					"/Users/joeywalter/antigravity-nexus/AntigravityTwin.uproject"
+				],
+				"cwd": "/Users/Shared/Epic Games/UE_5.7",
+				"type": "lldb"
+			},
+			{
+				"name": "Launch AntigravityTwinEditor (Development)",
+				"request": "launch",
+				"program": "/Users/Shared/Epic Games/UE_5.7/Engine/Binaries/Mac/UnrealEditor.app/Contents/MacOS/UnrealEditor",
+				"preLaunchTask": "AntigravityTwinEditor Mac Development Build",
+				"args": [
+					"/Users/joeywalter/antigravity-nexus/AntigravityTwin.uproject"
+				],
+				"cwd": "/Users/Shared/Epic Games/UE_5.7",
+				"type": "lldb"
+			},
+			{
+				"name": "Generate Project Files",
+				"type": "coreclr",
+				"request": "launch",
+				"preLaunchTask": "UnrealBuildTool Mac Development Build",
+				"program": "/Users/Shared/Epic Games/UE_5.7/Engine/Build/BatchFiles/RunUBT.bat",
+				"args": [
+					"-projectfiles",
+					"-vscode",
+					"-project=/Users/joeywalter/antigravity-nexus/AntigravityTwin.uproject",
+					"-game",
+					"-engine",
+					"-dotnet"
+				],
+				"env": {
+					"PATH": "/Users/Shared/Epic Games/UE_5.7/Engine/Binaries/ThirdParty/DotNet/8.0.412/mac-arm64:${env:PATH}",
+					"DOTNET_ROOT": "/Users/Shared/Epic Games/UE_5.7/Engine/Binaries/ThirdParty/DotNet/8.0.412/mac-arm64",
+					"DOTNET_HOST_PATH": "/Users/Shared/Epic Games/UE_5.7/Engine/Binaries/ThirdParty/DotNet/8.0.412/mac-arm64/dotnet",
+					"DOTNET_MULTILEVEL_LOOKUP": "0",
+					"DOTNET_ROLL_FORWARD": "LatestMajor"
+				},
+				"console": "internalConsole",
+				"internalConsoleOptions": "openOnSessionStart",
+				"stopAtEntry": false,
+				"cwd": "/Users/Shared/Epic Games/UE_5.7"
+			}
+		]
+	}
+}

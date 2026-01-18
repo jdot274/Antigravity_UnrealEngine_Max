@@ -6,8 +6,8 @@ public class AntigravityTwin : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "UMG", "Blutility" });
-
-		PrivateDependencyModuleNames.AddRange(new string[] {  });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "UMG", "Blutility", "Json", "JsonUtilities", "HTTP" });
+        
+        PrivateDependencyModuleNames.AddRange(new string[] { });
 	}
 }

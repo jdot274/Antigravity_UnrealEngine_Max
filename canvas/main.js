@@ -1,20 +1,24 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, screen } = require('electron');
 const path = require('path');
 
 function createWindow() {
+  const { width, height } = screen.getPrimaryDisplay().workAreaSize;
   const mainWindow = new BrowserWindow({
-    width: 1200,
-    height: 800,
-    titleBarStyle: 'hiddenInset',
+    width: Math.min(1400, width - 100),
+    height: Math.min(900, height - 100),
+    frame: false,
+    transparent: true,
+    titleBarStyle: 'hidden',
     vibrancy: 'under-window', // macOS glass effect
     visualEffectState: 'active',
     backgroundColor: '#00000000', // Transparent bg for vibrancy
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: false, // For prototype speed, allowing direct require in HTML if needed (optional)
+      contextIsolation: false,
     },
   });
 
+  mainWindow.center();
   mainWindow.loadFile('index.html');
 }
 

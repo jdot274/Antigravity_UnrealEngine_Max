@@ -204,6 +204,29 @@ def _auto_import_data():
     nexus_importer.run_importer_suite()
     show_alert("✅ Data Assets Created.\nMapped with NexusType metadata.", "Nexus Importer")
 
+def _auto_gen_sdf():
+    show_alert("Calculating Signed Distance Fields (Numpy)...\nGenerating Gyroids and Tool-Orbs.")
+    import nexus_sdf_gen
+    nexus_sdf_gen.generate_tool_garden()
+    show_alert("✅ SDF Geometry Generated.\nWelcome to the Math Garden.", "Nexus SDF")
+
+def _auto_build_bsdf():
+    show_alert("Compiling Principled BSDF Shader...\nEnabling Transmission & Surface Forward Shading.")
+    import nexus_material_builder
+    nexus_material_builder.create_bsdf_master_material()
+    show_alert("✅ Material Ready: M_Nexus_BSDF_Master\nApplied to SDF Generator.", "BSDF Engine")
+
+def _auto_material_ai():
+    import nexus_ai_material
+    # Randomly pick one for demo since we can't type
+    nexus_ai_material.prompt_user_for_material()
+    show_alert("✅ AI Material Generated.\nApplied Random Preset to Selection.", "AI Material")
+
+def _auto_director():
+    import nexus_ai_director
+    cmd = nexus_ai_director.demo_autopilot()
+    show_alert(f"🤖 Brain Executing:\n'{cmd}'", "Nexus Director")
+
 # Update Menu to include Level Gen
 class NexusMenuSetup:
     def __init__(self):
@@ -235,6 +258,14 @@ class NexusMenuSetup:
         # CAMERAS
         self._add_entry(nexus_menu, "Spawn AR Cameras", "Create Simulated AR CineCameras", _auto_spawn_cameras)
         self._add_entry(nexus_menu, "Import Data Types", "Generate Curves & Vector Fields", _auto_import_data)
+        
+        # SDF & MATERIALS
+        self._add_entry(nexus_menu, "Generate SDF Tool Garden", "Procedural Gyroids & Tool Visualization", _auto_gen_sdf)
+        self._add_entry(nexus_menu, "Build BSDF Master Mat", "Recompile Glass/Transmission Shader", _auto_build_bsdf)
+        self._add_entry(nexus_menu, "Generate Material (AI)", "Text-to-BSDF (Simulated LLM)", _auto_material_ai)
+        self._add_entry(nexus_menu, "Omni-Director (AI)", "Execute Complex Directives", _auto_director)
+        self._add_entry(nexus_menu, "Validate & Ship (AAA)", "Prepare Ultimate Package", _auto_ship)
+        self._add_entry(nexus_menu, "Check Plugin Status", "Verify 2026 Ecosystem", _auto_plugins)
         
         self.menus.refresh_all_widgets()
         unreal.log("✅ Nexus Tools & CLI Initialized")

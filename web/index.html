@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Antigravity Nexus | Introduction</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3e 50%, #0d0d2b 100%);
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+        }
+
+        .title {
+            font-size: 5rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, #00f0ff, #8b5cf6, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 60px rgba(0, 240, 255, 0.5);
+            animation: pulse 3s ease-in-out infinite;
+            letter-spacing: -2px;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.9;
+                transform: scale(1.02);
+            }
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 1rem;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+        }
+
+        .manifest-container {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            pointer-events: all;
+            z-index: 20;
+        }
+
+        .manifest-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 20px 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 180px;
+            text-align: center;
+        }
+
+        .manifest-card:hover {
+            background: rgba(0, 240, 255, 0.1);
+            border-color: rgba(0, 240, 255, 0.3);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 240, 255, 0.2);
+        }
+
+        .manifest-card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #00f0ff;
+            margin-bottom: 8px;
+        }
+
+        .manifest-card p {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .launch-btn {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, 100px);
+            background: linear-gradient(135deg, #00f0ff, #8b5cf6);
+            border: none;
+            padding: 20px 60px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #fff;
+            border-radius: 50px;
+            cursor: pointer;
+            pointer-events: all;
+            z-index: 20;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+        }
+
+        .launch-btn:hover {
+            transform: translate(-50%, 100px) scale(1.05);
+            box-shadow: 0 0 60px rgba(0, 240, 255, 0.5);
+        }
+
+        #pixel-stream {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 5;
+            opacity: 0;
+            transition: opacity 1.5s ease;
+        }
+
+        #pixel-stream.active {
+            opacity: 1;
+        }
+
+        .fade-out {
+            animation: fadeOut 1s ease forwards;
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                pointer-events: none;
+            }
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(0, 240, 255, 0.6);
+            border-radius: 50%;
+            animation: float 15s linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="canvas-container"></div>
+
+    <div class="particles" id="particles"></div>
+
+    <iframe id="pixel-stream" src="http://127.0.0.1:80" allow="autoplay; fullscreen"></iframe>
+
+    <div class="overlay" id="intro-overlay">
+        <h1 class="title">ANTIGRAVITY</h1>
+        <p class="subtitle">Nexus Golf Experience</p>
+    </div>
+
+    <button class="launch-btn" id="launch-btn">Enter Game</button>
+
+    <div class="manifest-container">
+        <div class="manifest-card" onclick="showSection('core')">
+            <h3>Core Bridge</h3>
+            <p>11 C++ Commands</p>
+        </div>
+        <div class="manifest-card" onclick="showSection('gameplay')">
+            <h3>Gameplay</h3>
+            <p>Physics & Scoring</p>
+        </div>
+        <div class="manifest-card" onclick="showSection('levels')">
+            <h3>Levels</h3>
+            <p>Dynamic Streaming</p>
+        </div>
+        <div class="manifest-card" onclick="showSection('mcp')">
+            <h3>MCP Servers</h3>
+            <p>27 Integrations</p>
+        </div>
+        <div class="manifest-card" onclick="showSection('python')">
+            <h3>Python Bridge</h3>
+            <p>Runtime Control</p>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Three.js 3D Background
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        container.appendChild(renderer.domElement);
+
+        // Create floating geometry
+        const geometries = [];
+        const materials = [
+            new THREE.MeshBasicMaterial({ color: 0x00f0ff, wireframe: true, opacity: 0.3, transparent: true }),
+            new THREE.MeshBasicMaterial({ color: 0x8b5cf6, wireframe: true, opacity: 0.3, transparent: true }),
+            new THREE.MeshBasicMaterial({ color: 0xec4899, wireframe: true, opacity: 0.3, transparent: true })
+        ];
+
+        // Golf ball (icosphere)
+        const golfBall = new THREE.Mesh(
+            new THREE.IcosahedronGeometry(2, 1),
+            materials[0]
+        );
+        golfBall.position.set(-5, 0, -10);
+        scene.add(golfBall);
+        geometries.push(golfBall);
+
+        // Fairway (box)
+        const fairway = new THREE.Mesh(
+            new THREE.BoxGeometry(8, 0.5, 20),
+            materials[1]
+        );
+        fairway.position.set(5, -3, -15);
+        fairway.rotation.z = 0.1;
+        scene.add(fairway);
+        geometries.push(fairway);
+
+        // Flag (cone + cylinder)
+        const flag = new THREE.Mesh(
+            new THREE.ConeGeometry(1, 2, 4),
+            materials[2]
+        );
+        flag.position.set(0, 3, -12);
+        scene.add(flag);
+        geometries.push(flag);
+
+        // Torus rings
+        for (let i = 0; i < 5; i++) {
+            const torus = new THREE.Mesh(
+                new THREE.TorusGeometry(3 + i * 2, 0.1, 8, 50),
+                materials[i % 3]
+            );
+            torus.position.set(0, 0, -20 - i * 5);
+            torus.rotation.x = Math.PI / 2;
+            scene.add(torus);
+            geometries.push(torus);
+        }
+
+        camera.position.z = 5;
+
+        // Animate
+        function animate() {
+            requestAnimationFrame(animate);
+
+            geometries.forEach((geo, i) => {
+                geo.rotation.x += 0.002 * (i + 1);
+                geo.rotation.y += 0.003 * (i + 1);
+                geo.position.y += Math.sin(Date.now() * 0.001 + i) * 0.005;
+            });
+
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Particles
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 15 + 's';
+            particle.style.animationDuration = (10 + Math.random() * 10) + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        // Launch button
+        document.getElementById('launch-btn').addEventListener('click', () => {
+            document.getElementById('intro-overlay').classList.add('fade-out');
+            document.querySelector('.manifest-container').classList.add('fade-out');
+            document.getElementById('launch-btn').classList.add('fade-out');
+
+            setTimeout(() => {
+                document.getElementById('pixel-stream').classList.add('active');
+            }, 500);
+        });
+
+        // Section info (would show modal with manifest data)
+        function showSection(section) {
+            const manifest = {
+                core: 'C++ Commands: PING, INIT_SYSTEM, SPAWN_GAME, ADD_STROKE, HOLE_COMPLETE, GET_SCORE, RESET_GAME, LOAD_LEVEL, UNLOAD_LEVEL, RESTART_GAME, SET_CAMERA_TARGET',
+                gameplay: 'Scoring system, stroke handling, physics-enabled golf ball (0.045kg), camera transitions, HUD elements',
+                levels: 'Level streaming via ULevelStreamingDynamic, example level GolfCourse_Level.umap, streaming volumes',
+                mcp: '27 MCP servers: sequential-thinking, cloudrun, memory, elasticsearch, terraform, chroma, playwright, mongodb, notion, supabase, stripe, neon, azure, unity...',
+                python: 'init_unreal.py safe imports, nexus_game_manager.py game actions via UNexusBridge'
+            };
+            alert(manifest[section]);
+        }
+
+        // Resize handler
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+
+</html>

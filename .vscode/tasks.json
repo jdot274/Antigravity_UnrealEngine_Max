@@ -1,0 +1,46 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build Mac App",
+            "type": "shell",
+            "command": "source venv/bin/activate && python3 build_app.py",
+            "options": {
+                "cwd": "${workspaceFolder}/shader_overlay"
+            },
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Build Launcher Overlay",
+            "type": "shell",
+            "command": "source venv/bin/activate && pyinstaller --name='UnrealTacticalEditor' --windowed --noconfirm --clean --icon='ue_app_icon_1768423980485.png' ue_launcher.py",
+            "options": {
+                "cwd": "${workspaceFolder}/shader_overlay"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Build Unreal Project",
+            "type": "shell",
+            "command": "./build_project.sh",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "group": "build"
+        },
+        {
+            "label": "Launch Antigravity Nexus",
+            "type": "shell",
+            "command": "./launch_full_game.sh",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
+        }
+    ]
+}

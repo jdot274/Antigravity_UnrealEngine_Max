@@ -1,0 +1,52 @@
+{
+    "name": "antigravity-recorder",
+    "displayName": "Gravity",
+    "description": "AI-Powered Safety & Recording System",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.80.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "onView:antigravity.recorderView",
+        "onCommand:antigravity.startRecording"
+    ],
+    "main": "./out/extension.js",
+    "contributes": {
+        "viewsContainers": {
+            "activitybar": [
+                {
+                    "id": "antigravity-recorder-container",
+                    "title": "Antigravity Recorder",
+                    "icon": "resources/icon.svg"
+                }
+            ]
+        },
+        "views": {
+            "antigravity-recorder-container": [
+                {
+                    "id": "antigravity.recorderView",
+                    "name": "Recorder"
+                }
+            ]
+        },
+        "commands": [
+            {
+                "command": "antigravity.startRecording",
+                "title": "Start Antigravity Recording"
+            }
+        ]
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./"
+    },
+    "devDependencies": {
+        "@types/vscode": "^1.80.0",
+        "@types/node": "^16.x",
+        "typescript": "^5.0.0"
+    }
+}

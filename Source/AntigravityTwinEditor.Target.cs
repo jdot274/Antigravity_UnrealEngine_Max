@@ -9,5 +9,6 @@ public class AntigravityTwinEditorTarget : TargetRules
 		DefaultBuildSettings = BuildSettingsVersion.V6;
 		IncludeOrderVersion = EngineIncludeOrderVersion.Latest;
 		ExtraModuleNames.Add("AntigravityTwin");
+        ExtraModuleNames.Add("NexusRuntime");
 	}
 }

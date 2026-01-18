@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Antigravity Nexus</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gt-black: #0a0a0c;
+            --gt-dark: #121218;
+            --gt-panel: rgba(15, 15, 20, 0.95);
+            --gt-border: rgba(255, 255, 255, 0.08);
+            --gt-gold: #ffd60a;
+            --gt-cyan: #00fff5;
+            --gt-magenta: #ff00aa;
+            --gt-text: #ffffff;
+            --gt-text-dim: rgba(255, 255, 255, 0.5);
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--gt-black);
+            color: var(--gt-text);
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* SPLINE 3D BACKGROUND */
+        .spline-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .spline-bg iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* OVERLAY UI */
+        .overlay {
+            position: relative;
+            z-index: 10;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* TOP BAR - GT Style */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.8) 0%, transparent 100%);
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: 4px;
+            background: linear-gradient(135deg, var(--gt-gold), var(--gt-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(255, 214, 10, 0.3);
+        }
+
+        .version {
+            font-size: 11px;
+            color: var(--gt-text-dim);
+            letter-spacing: 2px;
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            flex: 1;
+            display: flex;
+            align-items: flex-end;
+            padding: 0 40px 40px;
+        }
+
+        /* ACTION CARDS - GT Racing Menu Style */
+        .action-grid {
+            display: flex;
+            gap: 16px;
+        }
+
+        .action-card {
+            width: 240px;
+            height: 140px;
+            background: var(--gt-panel);
+            border: 1px solid var(--gt-border);
+            border-radius: 4px;
+            padding: 20px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .action-card::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--accent-color, var(--gt-cyan));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .action-card:hover {
+            background: rgba(25, 25, 35, 0.98);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .action-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .action-card.active {
+            border-color: var(--gt-gold);
+            box-shadow: 0 0 40px rgba(255, 214, 10, 0.2), inset 0 0 20px rgba(255, 214, 10, 0.05);
+        }
+
+        .action-card.active::before {
+            transform: scaleX(1);
+            background: var(--gt-gold);
+        }
+
+        .card-icon {
+            font-size: 32px;
+            margin-bottom: 16px;
+        }
+
+        .card-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 4px;
+        }
+
+        .card-subtitle {
+            font-size: 12px;
+            color: var(--gt-text-dim);
+            letter-spacing: 1px;
+        }
+
+        /* Accent Colors */
+        .action-card[data-accent="orange"] {
+            --accent-color: #ff9500;
+        }
+
+        .action-card[data-accent="green"] {
+            --accent-color: #34c759;
+        }
+
+        .action-card[data-accent="purple"] {
+            --accent-color: #af52de;
+        }
+
+        .action-card[data-accent="cyan"] {
+            --accent-color: var(--gt-cyan);
+        }
+
+        /* STATUS BAR */
+        .status-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 12px 40px;
+            background: linear-gradient(0deg, rgba(0, 0, 0, 0.9) 0%, transparent 100%);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-text {
+            font-size: 11px;
+            color: var(--gt-text-dim);
+            letter-spacing: 2px;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--gt-cyan);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.4;
+            }
+        }
+
+        /* RIGHT PANEL - Info Display */
+        .info-panel {
+            position: fixed;
+            top: 100px;
+            right: 40px;
+            width: 300px;
+            background: var(--gt-panel);
+            border: 1px solid var(--gt-border);
+            border-radius: 4px;
+            padding: 24px;
+        }
+
+        .info-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            letter-spacing: 3px;
+            color: var(--gt-gold);
+            margin-bottom: 16px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--gt-border);
+            font-size: 13px;
+        }
+
+        .info-label {
+            color: var(--gt-text-dim);
+        }
+
+        .info-value {
+            font-weight: 500;
+        }
+
+        /* 3D TERRAIN VISUALIZATION LAYER */
+        .terrain-layer {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 60%;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .terrain-container {
+            width: 100%;
+            height: 100%;
+            perspective: 1200px;
+            transform-style: preserve-3d;
+        }
+
+        .terrain-box {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform: rotateX(55deg) rotateZ(-10deg);
+            transform-style: preserve-3d;
+        }
+
+        /* Grid backdrop */
+        .grid-back {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                linear-gradient(rgba(0, 255, 245, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 245, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            border: 1px solid rgba(0, 255, 245, 0.15);
+            transform: translateZ(-100px);
+        }
+
+        .grid-side-left {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100px;
+            height: 100%;
+            background:
+                linear-gradient(rgba(0, 255, 245, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 245, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            border: 1px solid rgba(0, 255, 245, 0.15);
+            transform: rotateY(90deg) translateZ(-50px);
+            transform-origin: left;
+        }
+
+        .grid-side-right {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100%;
+            background:
+                linear-gradient(rgba(0, 255, 245, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 245, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            border: 1px solid rgba(0, 255, 245, 0.15);
+            transform: rotateY(-90deg) translateZ(-50px);
+            transform-origin: right;
+        }
+
+        /* Wireframe terrain mesh */
+        .terrain-mesh {
+            position: absolute;
+            bottom: 20%;
+            left: 5%;
+            width: 90%;
+            height: 40%;
+            background: linear-gradient(transparent, rgba(0, 255, 245, 0.05));
+            border-bottom: 2px solid rgba(0, 255, 245, 0.4);
+            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 30'%3E%3Cpath d='M0,25 Q10,20 20,22 T40,15 T60,20 T80,10 T100,18 L100,30 L0,30 Z' fill='white'/%3E%3C/svg%3E");
+            -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 30'%3E%3Cpath d='M0,25 Q10,20 20,22 T40,15 T60,20 T80,10 T100,18 L100,30 L0,30 Z' fill='white'/%3E%3C/svg%3E");
+            mask-size: cover;
+            -webkit-mask-size: cover;
+        }
+
+        .terrain-mesh::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                repeating-linear-gradient(90deg, transparent, transparent 19px, rgba(0, 255, 245, 0.3) 19px, rgba(0, 255, 245, 0.3) 20px),
+                repeating-linear-gradient(0deg, transparent, transparent 9px, rgba(0, 255, 245, 0.2) 9px, rgba(0, 255, 245, 0.2) 10px);
+        }
+
+        /* Water reflection plane */
+        .water-plane {
+            position: absolute;
+            bottom: 15%;
+            left: 0;
+            width: 100%;
+            height: 5%;
+            background: linear-gradient(90deg,
+                    rgba(0, 255, 245, 0.1),
+                    rgba(0, 255, 245, 0.3),
+                    rgba(0, 255, 245, 0.1));
+            border-top: 1px solid rgba(0, 255, 245, 0.5);
+        }
+
+        /* Data markers */
+        .data-marker {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transform-style: preserve-3d;
+        }
+
+        .marker-line {
+            width: 1px;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .marker-dot {
+            width: 8px;
+            height: 8px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+
+        .marker-label {
+            font-family: 'Orbitron', monospace;
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.7);
+            letter-spacing: 1px;
+            white-space: nowrap;
+            margin-top: 4px;
+        }
+
+        /* Data bar at bottom */
+        .data-bar {
+            position: absolute;
+            bottom: 5%;
+            left: 5%;
+            width: 90%;
+            height: 30px;
+            display: flex;
+            gap: 2px;
+        }
+
+        .data-block {
+            flex: 1;
+            background: rgba(0, 255, 245, 0.1);
+            border: 1px solid rgba(0, 255, 245, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', monospace;
+            font-size: 8px;
+            color: rgba(0, 255, 245, 0.6);
+            letter-spacing: 1px;
+        }
+
+        .data-block:nth-child(odd) {
+            background: rgba(0, 255, 245, 0.05);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 3D SPLINE BACKGROUND -->
+    <div class="spline-bg">
+        <iframe src="https://prod.spline.design/6Wq1Q7YGyM-iab9i/scene.splinecode" title="Antigravity 3D Scene"
+            loading="eager">
+        </iframe>
+    </div>
+
+    <!-- 3D TERRAIN VISUALIZATION LAYER -->
+    <div class="terrain-layer">
+        <div class="terrain-container">
+            <div class="terrain-box">
+                <!-- Grid walls -->
+                <div class="grid-back"></div>
+                <div class="grid-side-left"></div>
+                <div class="grid-side-right"></div>
+
+                <!-- Wireframe terrain -->
+                <div class="terrain-mesh"></div>
+
+                <!-- Water reflection -->
+                <div class="water-plane"></div>
+
+                <!-- Data markers -->
+                <div class="data-marker" style="left: 15%; top: 20%;">
+                    <div class="marker-label">$155,750 <span style="opacity:0.5">SAN</span></div>
+                    <div class="marker-line" style="height: 80px;"></div>
+                    <div class="marker-dot"></div>
+                </div>
+
+                <div class="data-marker" style="left: 25%; top: 35%;">
+                    <div class="marker-label">$51 <span style="opacity:0.5">AAN</span></div>
+                    <div class="marker-line" style="height: 50px;"></div>
+                    <div class="marker-dot"></div>
+                </div>
+
+                <div class="data-marker" style="left: 45%; top: 40%;">
+                    <div class="marker-label">20254 <span style="opacity:0.5">AAN</span></div>
+                    <div class="marker-line" style="height: 40px;"></div>
+                    <div class="marker-dot"></div>
+                </div>
+
+                <div class="data-marker" style="left: 60%; top: 15%;">
+                    <div class="marker-label">$854 <span style="opacity:0.5">SAN</span></div>
+                    <div class="marker-line" style="height: 100px;"></div>
+                    <div class="marker-dot"></div>
+                </div>
+
+                <div class="data-marker" style="left: 75%; top: 10%;">
+                    <div class="marker-label">$155,724 <span style="opacity:0.5">AAN</span></div>
+                    <div class="marker-line" style="height: 120px;"></div>
+                    <div class="marker-dot"></div>
+                </div>
+
+                <div class="data-marker" style="left: 90%; top: 25%;">
+                    <div class="marker-line" style="height: 70px;"></div>
+                    <div class="marker-dot"></div>
+                </div>
+
+                <!-- Data bar -->
+                <div class="data-bar">
+                    <div class="data-block">SAN</div>
+                    <div class="data-block">PSD</div>
+                    <div class="data-block">SAN</div>
+                    <div class="data-block">PSD</div>
+                    <div class="data-block">SAN</div>
+                    <div class="data-block">PSD</div>
+                    <div class="data-block">SAN</div>
+                    <div class="data-block">PSD</div>
+                    <div class="data-block">SAN</div>
+                    <div class="data-block">PSD</div>
+                    <div class="data-block">SAN</div>
+                    <div class="data-block">PSD</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- UI OVERLAY -->
+    <div class="overlay">
+
+        <!-- TOP BAR -->
+        <header class="top-bar">
+            <div>
+                <div class="logo">ANTIGRAVITY</div>
+                <div class="version">NEXUS CONTROL v1.0</div>
+            </div>
+        </header>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <div class="action-grid">
+
+                <div class="action-card active" data-accent="orange">
+                    <div class="card-icon">🛠️</div>
+                    <div class="card-title">UPDATE</div>
+                    <div class="card-subtitle">Apply latest changes</div>
+                </div>
+
+                <div class="action-card" data-accent="green">
+                    <div class="card-icon">🚀</div>
+                    <div class="card-title">PLAY</div>
+                    <div class="card-subtitle">Launch experience</div>
+                </div>
+
+                <div class="action-card" data-accent="purple">
+                    <div class="card-icon">⚡</div>
+                    <div class="card-title">EXPAND</div>
+                    <div class="card-subtitle">Add new content</div>
+                </div>
+
+                <div class="action-card" data-accent="cyan">
+                    <div class="card-icon">🧊</div>
+                    <div class="card-title">VIEW 3D</div>
+                    <div class="card-subtitle">Spline Interactive</div>
+                </div>
+
+            </div>
+        </main>
+
+        <!-- INFO PANEL -->
+        <aside class="info-panel">
+            <div class="info-title">SYSTEM STATUS</div>
+            <div class="info-row">
+                <span class="info-label">Engine</span>
+                <span class="info-value">Unreal 5.7</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Build</span>
+                <span class="info-value">Latest</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Mode</span>
+                <span class="info-value">Development</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Assets</span>
+                <span class="info-value">2,847</span>
+            </div>
+        </aside>
+
+    </div>
+
+    <!-- STATUS BAR -->
+    <footer class="status-bar">
+        <span class="status-text">SYSTEM B // GT INTERFACE</span>
+        <div class="status-indicator">
+            <span class="status-dot"></span>
+            <span class="status-text">ONLINE</span>
+        </div>
+    </footer>
+
+    <script>
+        // Card interaction
+        document.querySelectorAll('.action-card').forEach(card => {
+            card.addEventListener('click', () => {
+                document.querySelectorAll('.action-card').forEach(c => c.classList.remove('active'));
+                card.classList.add('active');
+            });
+        });
+    </script>
+
+</body>
+
+</html>

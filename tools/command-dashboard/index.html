@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Antigravity Command Center</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <div class="logo">
+                    <span class="logo-icon">⚡</span>
+                    <span class="logo-text">Antigravity Command Center</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span class="status-text">Connected</span>
+                </div>
+                <button class="theme-toggle" id="themeToggle" title="Toggle Theme">
+                    <span class="theme-icon">🌙</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- AI Assistants Panel -->
+            <section class="command-section" data-category="ai">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span class="section-icon">🤖</span>
+                        AI Assistants
+                    </h2>
+                    <span class="section-badge">4 tools</span>
+                </div>
+                <div class="command-grid">
+                    <button class="command-btn primary" data-command="gemini.chat" data-tooltip="Open Gemini Code Assist chat">
+                        <span class="btn-icon">💎</span>
+                        <span class="btn-label">Gemini Chat</span>
+                        <span class="btn-shortcut">gemini.chat</span>
+                    </button>
+                    <button class="command-btn primary" data-command="gemini.generateCode" data-tooltip="Generate code with Gemini">
+                        <span class="btn-icon">✨</span>
+                        <span class="btn-label">Generate Code</span>
+                        <span class="btn-shortcut">gemini.generateCode</span>
+                    </button>
+                    <button class="command-btn primary" data-command="gemini.explainCode" data-tooltip="Explain selected code">
+                        <span class="btn-icon">📖</span>
+                        <span class="btn-label">Explain Code</span>
+                        <span class="btn-shortcut">gemini.explainCode</span>
+                    </button>
+                    <button class="command-btn primary" data-command="gemini.fixCode" data-tooltip="Fix code issues">
+                        <span class="btn-icon">🔧</span>
+                        <span class="btn-label">Fix Code</span>
+                        <span class="btn-shortcut">gemini.fixCode</span>
+                    </button>
+                    <button class="command-btn accent" data-command="chatgpt.ask" data-tooltip="Ask ChatGPT">
+                        <span class="btn-icon">🧠</span>
+                        <span class="btn-label">ChatGPT Ask</span>
+                        <span class="btn-shortcut">chatgpt.ask</span>
+                    </button>
+                    <button class="command-btn accent" data-command="chatgpt.explain" data-tooltip="ChatGPT explain selection">
+                        <span class="btn-icon">💬</span>
+                        <span class="btn-label">ChatGPT Explain</span>
+                        <span class="btn-shortcut">chatgpt.explain</span>
+                    </button>
+                    <button class="command-btn accent" data-command="chatgpt.refactor" data-tooltip="Refactor with ChatGPT">
+                        <span class="btn-icon">🔄</span>
+                        <span class="btn-label">ChatGPT Refactor</span>
+                        <span class="btn-shortcut">chatgpt.refactor</span>
+                    </button>
+                    <button class="command-btn accent" data-command="chatgpt.optimize" data-tooltip="Optimize code with ChatGPT">
+                        <span class="btn-icon">⚡</span>
+                        <span class="btn-label">ChatGPT Optimize</span>
+                        <span class="btn-shortcut">chatgpt.optimize</span>
+                    </button>
+                    <button class="command-btn gradient" data-command="agentMaestro.orchestrate" data-tooltip="Agent Maestro orchestration">
+                        <span class="btn-icon">🎭</span>
+                        <span class="btn-label">Agent Maestro</span>
+                        <span class="btn-shortcut">agentMaestro.start</span>
+                    </button>
+                    <button class="command-btn gradient" data-command="gemini-cli.execute" data-tooltip="Execute Gemini CLI command">
+                        <span class="btn-icon">⌨️</span>
+                        <span class="btn-label">Gemini CLI</span>
+                        <span class="btn-shortcut">gemini-cli.execute</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Python Development -->
+            <section class="command-section" data-category="python">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span class="section-icon">🐍</span>
+                        Python Development
+                    </h2>
+                    <span class="section-badge">8 tools</span>
+                </div>
+                <div class="command-grid">
+                    <button class="command-btn python" data-command="python.execInTerminal" data-tooltip="Run Python file">
+                        <span class="btn-icon">▶️</span>
+                        <span class="btn-label">Run Python</span>
+                        <span class="btn-shortcut">python.execInTerminal</span>
+                    </button>
+                    <button class="command-btn python" data-command="python.debugFile" data-tooltip="Debug Python file">
+                        <span class="btn-icon">🐛</span>
+                        <span class="btn-label">Debug Python</span>
+                        <span class="btn-shortcut">python.debugFile</span>
+                    </button>
+                    <button class="command-btn python" data-command="python.setInterpreter" data-tooltip="Select Python interpreter">
+                        <span class="btn-icon">🔧</span>
+                        <span class="btn-label">Set Interpreter</span>
+                        <span class="btn-shortcut">python.setInterpreter</span>
+                    </button>
+                    <button class="command-btn python" data-command="python.createEnvironment" data-tooltip="Create virtual environment">
+                        <span class="btn-icon">📦</span>
+                        <span class="btn-label">Create Venv</span>
+                        <span class="btn-shortcut">python.createEnvironment</span>
+                    </button>
+                    <button class="command-btn python" data-command="isort.sortImports" data-tooltip="Sort imports with isort">
+                        <span class="btn-icon">📑</span>
+                        <span class="btn-label">Sort Imports</span>
+                        <span class="btn-shortcut">isort.sortImports</span>
+                    </button>
+                    <button class="command-btn python" data-command="python.runLinting" data-tooltip="Run linter">
+                        <span class="btn-icon">✅</span>
+                        <span class="btn-label">Run Linter</span>
+                        <span class="btn-shortcut">python.runLinting</span>
+                    </button>
+                    <button class="command-btn python" data-command="jupyter.createNotebook" data-tooltip="Create Jupyter notebook">
+                        <span class="btn-icon">📓</span>
+                        <span class="btn-label">New Notebook</span>
+                        <span class="btn-shortcut">jupyter.createNotebook</span>
+                    </button>
+                    <button class="command-btn python" data-command="jupyter.runAllCells" data-tooltip="Run all notebook cells">
+                        <span class="btn-icon">⏩</span>
+                        <span class="btn-label">Run All Cells</span>
+                        <span class="btn-shortcut">jupyter.runAllCells</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Java Development -->
+            <section class="command-section" data-category="java">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span class="section-icon">☕</span>
+                        Java Development
+                    </h2>
+                    <span class="section-badge">8 tools</span>
+                </div>
+                <div class="command-grid">
+                    <button class="command-btn java" data-command="java.debug.runJavaFile" data-tooltip="Run Java file">
+                        <span class="btn-icon">▶️</span>
+                        <span class="btn-label">Run Java</span>
+                        <span class="btn-shortcut">java.debug.runJavaFile</span>
+                    </button>
+                    <button class="command-btn java" data-command="java.debug.debugJavaFile" data-tooltip="Debug Java file">
+                        <span class="btn-icon">🐛</span>
+                        <span class="btn-label">Debug Java</span>
+                        <span class="btn-shortcut">java.debug.debugJavaFile</span>
+                    </button>
+                    <button class="command-btn java" data-command="java.project.create" data-tooltip="Create new Java project">
+                        <span class="btn-icon">📁</span>
+                        <span class="btn-label">New Project</span>
+                        <span class="btn-shortcut">java.project.create</span>
+                    </button>
+                    <button class="command-btn java" data-command="java.project.build" data-tooltip="Build Java project">
+                        <span class="btn-icon">🔨</span>
+                        <span class="btn-label">Build Project</span>
+                        <span class="btn-shortcut">java.project.build</span>
+                    </button>
+                    <button class="command-btn java" data-command="java.test.runAll" data-tooltip="Run all tests">
+                        <span class="btn-icon">🧪</span>
+                        <span class="btn-label">Run Tests</span>
+                        <span class="btn-shortcut">java.test.runAll</span>
+                    </button>
+                    <button class="command-btn java" data-command="maven.goal.install" data-tooltip="Maven install">
+                        <span class="btn-icon">📦</span>
+                        <span class="btn-label">Maven Install</span>
+                        <span class="btn-shortcut">maven.goal.install</span>
+                    </button>
+                    <button class="command-btn java" data-command="gradle.build" data-tooltip="Gradle build">
+                        <span class="btn-icon">🐘</span>
+                        <span class="btn-label">Gradle Build</span>
+                        <span class="btn-shortcut">gradle.build</span>
+                    </button>
+                    <button class="command-btn java" data-command="java.clean.workspace" data-tooltip="Clean workspace">
+                        <span class="btn-icon">🧹</span>
+                        <span class="btn-label">Clean Workspace</span>
+                        <span class="btn-shortcut">java.clean.workspace</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Docker & Containers -->
+            <section class="command-section" data-category="docker">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span class="section-icon">🐳</span>
+                        Docker & Containers
+                    </h2>
+                    <span class="section-badge">6 tools</span>
+                </div>
+                <div class="command-grid">
+                    <button class="command-btn docker" data-command="docker.build" data-tooltip="Build Docker image">
+                        <span class="btn-icon">🔨</span>
+                        <span class="btn-label">Build Image</span>
+                        <span class="btn-shortcut">docker.build</span>
+                    </button>
+                    <button class="command-btn docker" data-command="docker.run" data-tooltip="Run container">
+                        <span class="btn-icon">▶️</span>
+                        <span class="btn-label">Run Container</span>
+                        <span class="btn-shortcut">docker.run</span>
+                    </button>
+                    <button class="command-btn docker" data-command="docker.compose.up" data-tooltip="Docker Compose up">
+                        <span class="btn-icon">⬆️</span>
+                        <span class="btn-label">Compose Up</span>
+                        <span class="btn-shortcut">docker.compose.up</span>
+                    </button>
+                    <button class="command-btn docker" data-command="docker.compose.down" data-tooltip="Docker Compose down">
+                        <span class="btn-icon">⬇️</span>
+                        <span class="btn-label">Compose Down</span>
+                        <span class="btn-shortcut">docker.compose.down</span>
+                    </button>
+                    <button class="command-btn docker" data-command="docker.containers.view" data-tooltip="View containers">
+                        <span class="btn-icon">📋</span>
+                        <span class="btn-label">View Containers</span>
+                        <span class="btn-shortcut">docker.containers.view</span>
+                    </button>
+                    <button class="command-btn docker" data-command="docker.prune" data-tooltip="Prune unused resources">
+                        <span class="btn-icon">🗑️</span>
+                        <span class="btn-label">Prune</span>
+                        <span class="btn-shortcut">docker.prune</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Git & Version Control -->
+            <section class="command-section" data-category="git">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span class="section-icon">📊</span>
+                        Git & GitLens
+                    </h2>
+                    <span class="section-badge">8 tools</span>
+                </div>
+                <div class="command-grid">
+                    <button class="command-btn git" data-command="git.commit" data-tooltip="Commit changes">
+                        <span class="btn-icon">✅</span>
+                        <span class="btn-label">Commit</span>
+                        <span class="btn-shortcut">git.commit</span>
+                    </button>
+                    <button class="command-btn git" data-command="git.push" data-tooltip="Push to remote">
+                        <span class="btn-icon">⬆️</span>
+                        <span class="btn-label">Push</span>
+                        <span class="btn-shortcut">git.push</span>
+                    </button>
+                    <button class="command-btn git" data-command="git.pull" data-tooltip="Pull from remote">
+                        <span class="btn-icon">⬇️</span>
+                        <span class="btn-label">Pull</span>
+                        <span class="btn-shortcut">git.pull</span>
+                    </button>
+                    <button class="command-btn git" data-command="git.branch" data-tooltip="Create or switch branch">
+                        <span class="btn-icon">🌿</span>
+                        <span class="btn-label">Branch</span>
+                        <span class="btn-shortcut">git.branch</span>
+                    </button>
+                    <button class="command-btn git" data-command="gitlens.showGraph" data-tooltip="Show GitLens graph">
+                        <span class="btn-icon">📈</span>
+                        <span class="btn-label">Git Graph</span>
+                        <span class="btn-shortcut">gitlens.showGraph</span>
+                    </button>
+                    <button class="command-btn git" data-command="gitlens.showFileHistory" data-tooltip="Show file history">
+                        <span class="btn-icon">📜</span>
+                        <span class="btn-label">File History</span>
+                        <span class="btn-shortcut">gitlens.showFileHistory</span>
+                    </button>
+                    <button class="command-btn git" data-command="gitlens.compareWith" data-tooltip="Compare with...">
+                        <span class="btn-icon">🔍</span>
+                        <span class="btn-label">Compare</span>
+                        <span class="btn-shortcut">gitlens.compareWith</span>
+                    </button>
+                    <button class="command-btn git" data-command="gitlens.showBlame" data-tooltip="Toggle blame annotations">
+                        <span class="btn-icon">👤</span>
+                        <span class="btn-label">Blame</span>
+                        <span class="btn-shortcut">gitlens.showBlame</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Code Runner & Utilities -->
+            <section class="command-section" data-category="utilities">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span class="section-icon">🛠️</span>
+                        Code Runner & Utilities
+                    </h2>
+                    <span class="section-badge">8 tools</span>
+                </div>
+                <div class="command-grid">
+                    <button class="command-btn utility" data-command="code-runner.run" data-tooltip="Run code in any language">
+                        <span class="btn-icon">▶️</span>
+                        <span class="btn-label">Run Code</span>
+                        <span class="btn-shortcut">code-runner.run</span>
+                    </button>
+                    <button class="command-btn utility" data-command="code-runner.stop" data-tooltip="Stop running code">
+                        <span class="btn-icon">⏹️</span>
+                        <span class="btn-label">Stop Code</span>
+                        <span class="btn-shortcut">code-runner.stop</span>
+                    </button>
+                    <button class="command-btn utility" data-command="liveServer.goOnline" data-tooltip="Start live server">
+                        <span class="btn-icon">🌐</span>
+                        <span class="btn-label">Live Server</span>
+                        <span class="btn-shortcut">liveServer.goOnline</span>
+                    </button>
+                    <button class="command-btn utility" data-command="turboConsoleLog.displayLogMessage" data-tooltip="Insert console.log">
+                        <span class="btn-icon">📝</span>
+                        <span class="btn-label">Turbo Log</span>
+                        <span class="btn-shortcut">turboLog.insert</span>
+                    </button>
+                    <button class="command-btn utility" data-command="editor.action.formatDocument" data-tooltip="Format document">
+                        <span class="btn-icon">✨</span>
+                        <span class="btn-label">Format</span>
+                        <span class="btn-shortcut">editor.format</span>
+                    </button>
+                    <button class="command-btn utility" data-command="editor.action.organizeImports" data-tooltip="Organize imports">
+                        <span class="btn-icon">📑</span>
+                        <span class="btn-label">Organize Imports</span>
+                        <span class="btn-shortcut">editor.organizeImports</span>
+                    </button>
+                    <button class="command-btn utility" data-command="workbench.action.terminal.new" data-tooltip="New terminal">
+                        <span class="btn-icon">💻</span>
+                        <span class="btn-label">New Terminal</span>
+                        <span class="btn-shortcut">terminal.new</span>
+                    </button>
+                    <button class="command-btn utility" data-command="workbench.action.openSettings" data-tooltip="Open settings">
+                        <span class="btn-icon">⚙️</span>
+                        <span class="btn-label">Settings</span>
+                        <span class="btn-shortcut">settings.open</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- C/C++ Development -->
+            <section class="command-section" data-category="cpp">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span class="section-icon">⚙️</span>
+                        C/C++ Development
+                    </h2>
+                    <span class="section-badge">6 tools</span>
+                </div>
+                <div class="command-grid">
+                    <button class="command-btn cpp" data-command="clangd.restart" data-tooltip="Restart Clangd">
+                        <span class="btn-icon">🔄</span>
+                        <span class="btn-label">Restart Clangd</span>
+                        <span class="btn-shortcut">clangd.restart</span>
+                    </button>
+                    <button class="command-btn cpp" data-command="lldb.start" data-tooltip="Start LLDB debugger">
+                        <span class="btn-icon">🐛</span>
+                        <span class="btn-label">LLDB Debug</span>
+                        <span class="btn-shortcut">lldb.start</span>
+                    </button>
+                    <button class="command-btn cpp" data-command="clangd.switchSourceHeader" data-tooltip="Switch header/source">
+                        <span class="btn-icon">🔀</span>
+                        <span class="btn-label">Switch H/CPP</span>
+                        <span class="btn-shortcut">clangd.switch</span>
+                    </button>
+                    <button class="command-btn cpp" data-command="clangd.inlayHints.toggle" data-tooltip="Toggle inlay hints">
+                        <span class="btn-icon">👁️</span>
+                        <span class="btn-label">Inlay Hints</span>
+                        <span class="btn-shortcut">clangd.hints</span>
+                    </button>
+                    <button class="command-btn cpp" data-command="testExplorer.runAll" data-tooltip="Run Catch2 tests">
+                        <span class="btn-icon">🧪</span>
+                        <span class="btn-label">Catch2 Tests</span>
+                        <span class="btn-shortcut">catch2.runAll</span>
+                    </button>
+                    <button class="command-btn cpp" data-command="clangd.memoryUsage" data-tooltip="Show memory usage">
+                        <span class="btn-icon">📊</span>
+                        <span class="btn-label">Memory Usage</span>
+                        <span class="btn-shortcut">clangd.memory</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Database -->
+            <section class="command-section" data-category="database">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span class="section-icon">🗄️</span>
+                        Database Tools
+                    </h2>
+                    <span class="section-badge">4 tools</span>
+                </div>
+                <div class="command-grid">
+                    <button class="command-btn database" data-command="mysql.connection.new" data-tooltip="New MySQL connection">
+                        <span class="btn-icon">🔌</span>
+                        <span class="btn-label">New Connection</span>
+                        <span class="btn-shortcut">mysql.connect</span>
+                    </button>
+                    <button class="command-btn database" data-command="mysql.query.execute" data-tooltip="Execute SQL query">
+                        <span class="btn-icon">▶️</span>
+                        <span class="btn-label">Execute Query</span>
+                        <span class="btn-shortcut">mysql.execute</span>
+                    </button>
+                    <button class="command-btn database" data-command="mysql.table.show" data-tooltip="Show table data">
+                        <span class="btn-icon">📋</span>
+                        <span class="btn-label">Show Table</span>
+                        <span class="btn-shortcut">mysql.showTable</span>
+                    </button>
+                    <button class="command-btn database" data-command="mysql.export" data-tooltip="Export data">
+                        <span class="btn-icon">📤</span>
+                        <span class="btn-label">Export Data</span>
+                        <span class="btn-shortcut">mysql.export</span>
+                    </button>
+                </div>
+            </section>
+        </main>
+
+        <!-- Command Output Panel -->
+        <aside class="output-panel" id="outputPanel">
+            <div class="output-header">
+                <h3>Command Output</h3>
+                <button class="clear-btn" id="clearOutput">Clear</button>
+            </div>
+            <div class="output-content" id="outputContent">
+                <div class="output-welcome">
+                    <span class="output-icon">👋</span>
+                    <p>Click any button to execute a command</p>
+                    <p class="output-hint">Commands will be copied to clipboard and logged here</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Quick Actions Floating Bar -->
+        <div class="quick-actions" id="quickActions">
+            <button class="quick-btn" data-command="workbench.action.files.save" title="Save File">
+                <span>💾</span>
+            </button>
+            <button class="quick-btn" data-command="workbench.action.files.saveAll" title="Save All">
+                <span>📁</span>
+            </button>
+            <button class="quick-btn" data-command="editor.action.formatDocument" title="Format">
+                <span>✨</span>
+            </button>
+            <button class="quick-btn" data-command="workbench.action.terminal.toggleTerminal" title="Toggle Terminal">
+                <span>💻</span>
+            </button>
+            <button class="quick-btn" data-command="workbench.action.showCommands" title="Command Palette">
+                <span>🎯</span>
+            </button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
