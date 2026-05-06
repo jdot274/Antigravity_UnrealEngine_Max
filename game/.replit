@@ -1,0 +1,17 @@
+run = "make run"
+language = "cpp"
+entrypoint = "src/main.cpp"
+
+[nix]
+channel = "stable-24_05"
+
+[unitTest]
+language = "cpp"
+
+[deployment]
+run = ["sh", "-c", "make run"]
+deploymentTarget = "cloudrun"
+
+[[ports]]
+localPort = 8080
+externalPort = 80
