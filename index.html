@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Antigravity</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #0a0a0f;
+    color: #e0e0ff;
+    font-family: 'Courier New', monospace;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100dvh;
+    padding: 24px 16px;
+    gap: 20px;
+  }
+
+  h1 {
+    font-size: 1.6rem;
+    letter-spacing: 0.2em;
+    color: #7df9ff;
+    text-shadow: 0 0 16px #7df9ff88;
+  }
+
+  #stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    width: 100%;
+    max-width: 360px;
+  }
+
+  .stat-box {
+    background: #12121e;
+    border: 1px solid #2a2a4a;
+    border-radius: 10px;
+    padding: 14px;
+    text-align: center;
+  }
+
+  .stat-label { font-size: 0.65rem; color: #888; letter-spacing: 0.12em; margin-bottom: 6px; }
+  .stat-value { font-size: 1.5rem; color: #7df9ff; font-weight: bold; }
+
+  #arena {
+    width: 100%;
+    max-width: 360px;
+    height: 200px;
+    background: #0d0d1a;
+    border: 1px solid #2a2a4a;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #player {
+    width: 32px;
+    height: 32px;
+    background: #7df9ff;
+    border-radius: 50%;
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 0 20px #7df9ff;
+    transition: left 0.1s;
+  }
+
+  .enemy {
+    width: 24px;
+    height: 24px;
+    background: #ff4466;
+    border-radius: 4px;
+    position: absolute;
+    top: -30px;
+    box-shadow: 0 0 12px #ff4466;
+  }
+
+  #log {
+    width: 100%;
+    max-width: 360px;
+    background: #0d0d1a;
+    border: 1px solid #2a2a4a;
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 0.75rem;
+    color: #aaa;
+    height: 80px;
+    overflow-y: auto;
+    line-height: 1.6;
+  }
+
+  #controls {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+    max-width: 360px;
+  }
+
+  .btn {
+    flex: 1;
+    padding: 20px 0;
+    font-size: 1.4rem;
+    background: #12121e;
+    border: 1px solid #2a2a4a;
+    border-radius: 12px;
+    color: #7df9ff;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    active-transform: scale(0.95);
+    transition: background 0.1s, transform 0.08s;
+  }
+
+  .btn:active { background: #1e1e3a; transform: scale(0.95); }
+
+  #btn-start {
+    width: 100%;
+    max-width: 360px;
+    padding: 18px;
+    font-size: 1rem;
+    letter-spacing: 0.15em;
+    background: #7df9ff22;
+    border: 1px solid #7df9ff55;
+    border-radius: 12px;
+    color: #7df9ff;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    transition: background 0.1s;
+  }
+
+  #btn-start:active { background: #7df9ff44; }
+
+  #overlay {
+    position: fixed;
+    inset: 0;
+    background: #0a0a0fcc;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    z-index: 10;
+    backdrop-filter: blur(4px);
+  }
+
+  #overlay h2 { font-size: 1.8rem; color: #7df9ff; }
+  #overlay p  { color: #aaa; font-size: 0.9rem; text-align: center; padding: 0 24px; }
+</style>
+</head>
+<body>
+
+<h1>ANTIGRAVITY</h1>
+
+<div id="stats">
+  <div class="stat-box"><div class="stat-label">SCORE</div><div class="stat-value" id="score">0</div></div>
+  <div class="stat-box"><div class="stat-label">LIVES</div><div class="stat-value" id="lives">3</div></div>
+  <div class="stat-box"><div class="stat-label">LEVEL</div><div class="stat-value" id="level">1</div></div>
+  <div class="stat-box"><div class="stat-label">DODGED</div><div class="stat-value" id="dodged">0</div></div>
+</div>
+
+<div id="arena">
+  <div id="player"></div>
+</div>
+
+<div id="log">Tap START to play...</div>
+
+<div id="controls">
+  <button class="btn" id="btn-left">◀</button>
+  <button class="btn" id="btn-right">▶</button>
+</div>
+
+<button id="btn-start">START</button>
+
+<div id="overlay">
+  <h2>ANTIGRAVITY</h2>
+  <p>Dodge the falling enemies.<br>Move left and right to survive.</p>
+  <button id="btn-start2" style="padding:16px 40px;font-size:1rem;letter-spacing:0.15em;background:#7df9ff22;border:1px solid #7df9ff55;border-radius:12px;color:#7df9ff;cursor:pointer;">TAP TO START</button>
+</div>
+
+<script>
+  const arena   = document.getElementById('arena');
+  const player  = document.getElementById('player');
+  const logEl   = document.getElementById('log');
+  const overlay = document.getElementById('overlay');
+
+  let playerX = 164, arenaW = 360, running = false;
+  let score = 0, lives = 3, level = 1, dodged = 0;
+  let enemies = [], spawnTimer = 0, spawnInterval = 120, speed = 1.8;
+  let frame = 0;
+
+  function log(msg) {
+    logEl.textContent = msg;
+  }
+
+  function updateStats() {
+    document.getElementById('score').textContent  = score;
+    document.getElementById('lives').textContent  = lives;
+    document.getElementById('level').textContent  = level;
+    document.getElementById('dodged').textContent = dodged;
+  }
+
+  function spawnEnemy() {
+    const el = document.createElement('div');
+    el.className = 'enemy';
+    const x = Math.random() * (arenaW - 24);
+    el.style.left = x + 'px';
+    arena.appendChild(el);
+    enemies.push({ el, x, y: -30 });
+  }
+
+  function gameLoop() {
+    if (!running) return;
+    frame++;
+    spawnTimer++;
+
+    arenaW = arena.clientWidth;
+    playerX = Math.max(0, Math.min(arenaW - 32, playerX));
+    player.style.left = playerX + 'px';
+
+    if (spawnTimer >= spawnInterval) {
+      spawnEnemy();
+      spawnTimer = 0;
+    }
+
+    const arenaH = arena.clientHeight;
+    const playerTop = arenaH - 52;
+
+    for (let i = enemies.length - 1; i >= 0; i--) {
+      const e = enemies[i];
+      e.y += speed;
+      e.el.style.top = e.y + 'px';
+
+      // hit check
+      if (
+        e.y + 24 >= playerTop &&
+        e.y <= playerTop + 32 &&
+        e.x + 24 >= playerX &&
+        e.x <= playerX + 32
+      ) {
+        e.el.remove();
+        enemies.splice(i, 1);
+        lives--;
+        updateStats();
+        log(lives > 0 ? `Hit! ${lives} ${lives === 1 ? 'life' : 'lives'} left.` : 'Game over!');
+        if (lives <= 0) { endGame(); return; }
+        continue;
+      }
+
+      // passed
+      if (e.y > arenaH) {
+        e.el.remove();
+        enemies.splice(i, 1);
+        score += 10;
+        dodged++;
+        if (dodged % 10 === 0) {
+          level++;
+          speed  = Math.min(speed + 0.4, 6);
+          spawnInterval = Math.max(spawnInterval - 10, 40);
+          log(`Level ${level}! Speed up!`);
+        }
+        updateStats();
+      }
+    }
+
+    requestAnimationFrame(gameLoop);
+  }
+
+  function startGame() {
+    overlay.style.display = 'none';
+    score = 0; lives = 3; level = 1; dodged = 0;
+    speed = 1.8; spawnInterval = 120; spawnTimer = 0; frame = 0;
+    enemies.forEach(e => e.el.remove());
+    enemies = [];
+    playerX = (arena.clientWidth - 32) / 2;
+    running = true;
+    updateStats();
+    log('Dodge the red blocks!');
+    requestAnimationFrame(gameLoop);
+  }
+
+  function endGame() {
+    running = false;
+    enemies.forEach(e => e.el.remove());
+    enemies = [];
+    overlay.innerHTML = `
+      <h2>GAME OVER</h2>
+      <p>Score: ${score}<br>Level: ${level}<br>Dodged: ${dodged}</p>
+      <button onclick="startGame()" style="padding:16px 40px;font-size:1rem;letter-spacing:0.15em;background:#7df9ff22;border:1px solid #7df9ff55;border-radius:12px;color:#7df9ff;cursor:pointer;">PLAY AGAIN</button>
+    `;
+    overlay.style.display = 'flex';
+  }
+
+  // controls
+  let leftHeld = false, rightHeld = false;
+  const STEP = 14;
+
+  document.getElementById('btn-left').addEventListener('touchstart',  e => { e.preventDefault(); leftHeld  = true;  }, { passive: false });
+  document.getElementById('btn-left').addEventListener('touchend',    e => { e.preventDefault(); leftHeld  = false; }, { passive: false });
+  document.getElementById('btn-right').addEventListener('touchstart', e => { e.preventDefault(); rightHeld = true;  }, { passive: false });
+  document.getElementById('btn-right').addEventListener('touchend',   e => { e.preventDefault(); rightHeld = false; }, { passive: false });
+
+  // mouse fallback
+  document.getElementById('btn-left').addEventListener('mousedown',  () => leftHeld  = true);
+  document.getElementById('btn-left').addEventListener('mouseup',    () => leftHeld  = false);
+  document.getElementById('btn-right').addEventListener('mousedown', () => rightHeld = true);
+  document.getElementById('btn-right').addEventListener('mouseup',   () => rightHeld = false);
+
+  setInterval(() => {
+    if (running) {
+      if (leftHeld)  playerX -= STEP;
+      if (rightHeld) playerX += STEP;
+    }
+  }, 30);
+
+  // keyboard
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft')  leftHeld  = true;
+    if (e.key === 'ArrowRight') rightHeld = true;
+  });
+  document.addEventListener('keyup', e => {
+    if (e.key === 'ArrowLeft')  leftHeld  = false;
+    if (e.key === 'ArrowRight') rightHeld = false;
+  });
+
+  document.getElementById('btn-start').addEventListener('click', startGame);
+  document.getElementById('btn-start2').addEventListener('click', startGame);
+</script>
+</body>
+</html>
